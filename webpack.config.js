@@ -9,11 +9,6 @@ module.exports = {
     path: path.join(__dirname, '/app/backend/static'),
     filename: 'bundle.js'
   },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   title: 'Webpack'
-    // })
-  ],
   resolve: {
     extensions: ['.js', '.jsx', '.json']
   },
