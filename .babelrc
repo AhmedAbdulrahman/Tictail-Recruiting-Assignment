@@ -1,0 +1,19 @@
+{
+  "presets": [
+    "react",
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": "last 2 versions"
+        },
+        "loose": true,
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    // Add class properties onto ES6 Classes so that we do need to bind function within the Constructor
+    "babel-plugin-transform-class-properties"
+  ]
+}
