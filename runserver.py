@@ -1,7 +1,7 @@
 import json
 import uuid
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 from flask_restful import Resource, Api
 from flask_restful import abort, fields, marshal_with, reqparse
 
@@ -13,20 +13,22 @@ staticDirectory = os.path.join(os.path.dirname(
 app = Flask(
     __name__,
     template_folder=templateDirectory,
-    static_folder=staticDirectory)
+    static_folder=staticDirectory
+)
 
 api = Api(app)
 contacts = json.loads(open('contacts.json').read())
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# @app.route('/')
+# def redirection():
+#     return redirect(url_for("application"), 302)
 
 
 @app.route('/admin')
-def admin():
-    return render_template('admin.html')
+@app.route('/team')
+def application():
+    return render_template('index.html')
 
 
 contact_fields = {
