@@ -1,13 +1,23 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import placeholder from '../../backend/templates/img/placeholder.png'
 
 const Tr = styled.tr`
+  td {
+    padding: 15px;
+    text-align: center;
+  }
+  td:first-child {
+    border-radius: 2px 0 0 2px;
+  }
   td:last-child {
+    border-radius: 0 2px 2px 0;
     overflow: visible;
     white-space: normal;
   }
 `
 const Td = styled.td`
+  text-align: center;
   border: 1px solid #dddddd;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -15,30 +25,35 @@ const Td = styled.td`
 `
 
 const ButtonEdit = styled.button`
+  width: 40%;
+  background-color: #ffe57c;
   font-size: 14px;
-  line-height: 30px;
-  color: #000;
-  background-color: #ffdb49;
-  border: 1px solid #eeeeee;
-  padding: 0 17px;
+  color: #3d4041;
+  border: 0;
+  border-radius: 2px;
+  outline: none;
+  padding: 10px;
   margin-right: 10px;
-  width: 30%;
-  border-radius: 30px;
-  cursor: pointer;
   transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    background-color: #ffdb49;
+    border-color: #cccccc;
+    color: #000000;
+  }
 `
 class TeamMember extends Component {
   render() {
     return (
       <Tr>
-        <Td>{this.props.first_name || 'N/A'}</Td>
-        <Td>{this.props.last_name || 'N/A'}</Td>
-        <Td>{this.props.title || 'N/A'}</Td>
-        <Td>{this.props.team || 'N/A'}</Td>
-        <Td>
+        <td>{this.props.first_name || 'N/A'}</td>
+        <td>{this.props.last_name || 'N/A'}</td>
+        <td colSpan="2">{this.props.title || 'N/A'}</td>
+        <td>{this.props.team || 'N/A'}</td>
+        <td>
           <ButtonEdit>Edit</ButtonEdit>
           <ButtonEdit>Delete</ButtonEdit>
-        </Td>
+        </td>
       </Tr>
     )
   }

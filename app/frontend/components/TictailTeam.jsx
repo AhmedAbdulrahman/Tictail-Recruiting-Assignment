@@ -45,7 +45,7 @@ const CardImageHover = styled.div`
 const CardImage = styled.img`
   width: 100%;
   max-width: 100%;
-  ${CardImageHover}:hover & {
+  ${CardMember}:hover & {
     filter: grayscale(100%);
   }
 `

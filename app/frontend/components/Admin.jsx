@@ -5,6 +5,32 @@ import styled from 'styled-components'
 // Get Components
 import TeamMemberList from './TeamMemberList'
 import Form from './Form'
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 1200px;
+  margin: 0 auto;
+`
+
+const AddButton = styled.button`
+  width: 10%;
+  background-color: #fff;
+  border: 2px solid #dce2ec;
+  border-radius: 2px;
+  font-size: 14px;
+  color: #ffdb49;
+  outline: none;
+  padding: 10px;
+  margin-bottom: 30px;
+  transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    border-color: #ddc76b;
+    color: #000000;
+  }
+`
 class Admin extends Component {
   state = {
     team: [],
@@ -44,15 +70,14 @@ class Admin extends Component {
   }
 
   render() {
+    const { member } = this.state
     return (
-      <div className="wrapper">
+      <Wrapper>
         <h1>Tictail Team Manager</h1>
-        <button className="button primary" onClick={this.handleAdd}>
-          Add Member
-        </button>
-        {this.state.showForm ? <Form member={this.state.member} onCancel={this.handleCancel} /> : null}
+        <AddButton onClick={this.handleAdd}>Add Member</AddButton>
+        {this.state.showForm ? <Form member={member} onCancel={this.handleCancel} /> : null}
         <TeamMemberList team={this.state.team} edit={this.handleEditMember} delete={this.handleDeleteMember} />
-      </div>
+      </Wrapper>
     )
   }
 }
