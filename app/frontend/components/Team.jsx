@@ -67,12 +67,7 @@ class Team extends Component {
 
   componentDidMount() {
     axios
-      .get(this.props.url, {
-        validateStatus: function(status) {
-          console.log(status)
-          return status < 200 // Reject only if the status code is greater than or equal to 200
-        }
-      })
+      .get(this.props.url)
       .then(response => {
         this.setState({ team: response.data })
         console.log(response.status)

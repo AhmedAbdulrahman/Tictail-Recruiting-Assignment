@@ -11,7 +11,7 @@ const App = () => (
     <div className="app">
       <Switch>
         <Route path="/team" component={props => <Team url="contacts" {...props} />} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/admin" component={props => <Admin url="contacts" {...props} />} />
       </Switch>
     </div>
   </BrowserRouter>
