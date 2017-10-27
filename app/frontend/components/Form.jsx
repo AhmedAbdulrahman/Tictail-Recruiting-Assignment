@@ -96,7 +96,17 @@ const CancelButton = styled.button`
 `
 
 class componentName extends Component {
-  handleFormSubmit(e) {
+  //Input Change handler
+  handleChange = e => {
+    const member = this.props.member
+    member[e.target.id] = e.target.value.trim()
+    console.log(member)
+    this.props.handleChange(member)
+    return
+  }
+
+  //Form Submit Handler
+  handleFormSubmit = e => {
     e.preventDefault()
     if (
       !this.props.member.first_name ||
@@ -106,97 +116,54 @@ class componentName extends Component {
       !this.props.member.image ||
       !this.props.member.location
     ) {
-      this.props.onFormError()
+      this.props.handleError()
       return
     }
-    this.props.onMemberSubmit()
+    this.props.handleSubmit()
     return
   }
-
+  // Form Cancel Handler
   handleCancel = e => {
     e.preventDefault()
-    this.props.onCancel()
+    this.props.handleCancel()
     return
   }
   render() {
     return (
       <Container>
-        <Form>
+        <Form onSubmit={this.handleFormSubmit}>
           <FormGroup>
             <Label htmlFor="first_name">First Name</Label>
-            <Input
-              id="first_name"
-              type="text"
-              placeholder="First Name"
-              value={this.props.member.first_name}
-              onChange={this.handleChange}
-              autoFocus
-            />
+            <Input id="first_name" type="text" placeholder="First Name" onChange={this.handleChange} autoFocus />
           </FormGroup>
 
           <FormGroup>
             <Label htmlFor="last_name">Last Name</Label>
-            <Input
-              id="last_name"
-              type="text"
-              placeholder="Last Name"
-              value={this.props.member.last_name}
-              onChange={this.handleChange}
-            />
+            <Input id="last_name" type="text" placeholder="Last Name" onChange={this.handleChange} />
           </FormGroup>
 
           <FormGroup>
             <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              type="text"
-              placeholder="Title"
-              value={this.props.member.title}
-              onChange={this.handleChange}
-            />
+            <Input id="title" type="text" placeholder="Title" onChange={this.handleChange} />
           </FormGroup>
 
           <FormGroup>
             <Label htmlFor="team">Team</Label>
-            <Input
-              id="team"
-              type="text"
-              placeholder="Team"
-              value={this.props.member.team}
-              onChange={this.handleChange}
-            />
+            <Input id="team" type="text" placeholder="Team" onChange={this.handleChange} />
           </FormGroup>
 
           <FormGroup>
             <Label htmlFor="color">Color</Label>
-            <Input
-              id="color"
-              type="text"
-              placeholder="Color"
-              value={this.props.member.color}
-              onChange={this.handleChange}
-            />
+            <Input id="color" type="text" placeholder="Color" onChange={this.handleChange} />
           </FormGroup>
 
           <FormGroup>
             <Label htmlFor="image">Image</Label>
-            <Input
-              id="image"
-              type="text"
-              placeholder="Image"
-              value={this.props.member.image}
-              onChange={this.handleChange}
-            />
+            <Input id="image" type="text" placeholder="Image" onChange={this.handleChange} />
           </FormGroup>
           <FormGroup>
             <Label htmlFor="Location">Location</Label>
-            <Input
-              id="location"
-              type="text"
-              placeholder="Location"
-              value={this.props.member.location}
-              onChange={this.handleChange}
-            />
+            <Input id="location" type="text" placeholder="Location" onChange={this.handleChange} />
           </FormGroup>
           <FormGroup>
             <Input type="text" ref="id" hidden value={this.props.member.id} onChange={this.handleChange} />

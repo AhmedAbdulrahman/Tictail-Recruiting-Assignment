@@ -30,13 +30,17 @@ const Th = styled.th`
 `
 
 class TeamMemberList extends Component {
-  handelEditMember() {}
+  handleEdit = member => idx => {
+    this.props.handleEdit(idx)
+    console.log(`${member} is now editing...`)
+    return
+  }
+  handleDelete = (id, idx) => {
+    this.props.handleDelete(id, idx)
+    return
+  }
 
   render() {
-    const allMembers = this.props.team.map(function(member) {
-      return <TeamMember key={member.id} {...member} />
-    })
-
     return (
       <Table>
         <thead>
@@ -48,7 +52,11 @@ class TeamMemberList extends Component {
             <Th>Action</Th>
           </tr>
         </thead>
-        <Tbody>{allMembers}</Tbody>
+        <Tbody>
+          {this.props.team.map(function(member) {
+            return <TeamMember key={member.id} {...member} />
+          })}
+        </Tbody>
       </Table>
     )
   }

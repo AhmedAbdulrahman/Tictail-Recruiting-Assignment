@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import styled from 'styled-components'
+
+// API
+import { fetchTeam, endpointReuqest } from '../utils/api'
 
 // Get Components
 import TeamMemberList from './TeamMemberList'
@@ -13,7 +15,6 @@ const Wrapper = styled.div`
   width: 1200px;
   margin: 0 auto;
 `
-
 const AddButton = styled.button`
   width: 10%;
   background-color: #fff;
@@ -38,6 +39,9 @@ class Admin extends Component {
     showForm: false,
     hasError: false
   }
+
+  // Form Handlers
+  // Add Button
   handleAdd = () => {
     this.setState(() => {
       return {
@@ -47,7 +51,7 @@ class Admin extends Component {
       }
     })
   }
-
+  // Cancel Button
   handleCancel = () => {
     this.setState(() => {
       return {
@@ -57,16 +61,67 @@ class Admin extends Component {
       }
     })
   }
-  // Loads team members from API
-  componentDidMount() {
-    axios
-      .get(this.props.url)
-      .then(response => {
-        this.setState({ team: response.data })
+  // Adding New Member handler
+  handleSubmit = () => {
+    const isMember = !this.state.member.id
+    const url = this.props.url + (isMember ? '' : '/' + this.state.member.id)
+    const data = this.state.member
+
+    endpointReuqest(url, data)
+      .then(newMember => {
+        if (isMember) {
+          const team = this.state.team
+          const newTeam = [member].concat(team)
+          this.setState(() => {
+            return {
+              member: member
+            }
+          })
+          console.log(newMember)
+        }
+        this.setState({ showForm: false, member: {}, hasError: false })
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error)
       })
+  }
+
+  handleChange = member => {
+    this.setState(() => {
+      return {
+        member: member
+      }
+    })
+  }
+  //Handle Form Errors
+  handleError = () => {
+    this.setState({ hasFormError: true })
+  }
+
+  // Team Members (Edit, Delete) Handlers
+  // Edit click handler
+  handleMemberEdit = i => {
+    const member = this.state.team[i]
+    this.setState({
+      member: member,
+      showForm: true
+    })
+  }
+  // Delete Click Handler
+  handleDelete = (id, index) => {
+    const url = `${this.props.url}/${id}`
+    const team = this.state.team
+    team.splice(index, 1)
+    this.setState({ team: team })
+    endpointReuqest('DELETE', url, {})
+  }
+
+  // Loads team members from API
+  componentDidMount() {
+    fetchTeam(this.props.url).then(response => {
+      this.setState({ team: response })
+      console.log(response)
+    })
   }
 
   render() {
@@ -75,8 +130,20 @@ class Admin extends Component {
       <Wrapper>
         <h1>Tictail Team Manager</h1>
         <AddButton onClick={this.handleAdd}>Add Member</AddButton>
-        {this.state.showForm ? <Form member={member} onCancel={this.handleCancel} /> : null}
-        <TeamMemberList team={this.state.team} edit={this.handleEditMember} delete={this.handleDeleteMember} />
+        {this.state.showForm ? (
+          <Form
+            member={member}
+            handleCancel={this.handleCancel}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+            handleError={this.handleError}
+          />
+        ) : null}
+        <TeamMemberList
+          team={this.state.team}
+          handleEdit={this.handleMemberEdit}
+          handleDelete={this.handleDeleteMember}
+        />
       </Wrapper>
     )
   }

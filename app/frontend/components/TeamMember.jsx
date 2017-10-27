@@ -43,6 +43,14 @@ const ButtonEdit = styled.button`
   }
 `
 class TeamMember extends Component {
+  handleEdit = () => {
+    this.props.handleEdit(this.props.index)
+    return
+  }
+  handleDelete = () => {
+    this.props.handleDelete(this.props.id, this.props.index)
+    return
+  }
   render() {
     return (
       <Tr>
@@ -51,8 +59,8 @@ class TeamMember extends Component {
         <td colSpan="2">{this.props.title || 'N/A'}</td>
         <td>{this.props.team || 'N/A'}</td>
         <td>
-          <ButtonEdit>Edit</ButtonEdit>
-          <ButtonEdit>Delete</ButtonEdit>
+          <ButtonEdit onClick={this.handleEdit}>Edit</ButtonEdit>
+          <ButtonEdit onClick={this.handleDelete}>Delete</ButtonEdit>
         </td>
       </Tr>
     )

@@ -31368,11 +31368,10 @@ var Spinner = function Spinner() {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_styled_components__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TeamMemberList__ = __webpack_require__(115);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Form__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_styled_components__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TeamMemberList__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Form__ = __webpack_require__(118);
 var _templateObject = _taggedTemplateLiteralLoose(['\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: 1200px;\n  margin: 0 auto;\n'], ['\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: 1200px;\n  margin: 0 auto;\n']),
     _templateObject2 = _taggedTemplateLiteralLoose(['\n  width: 10%;\n  background-color: #fff;\n  border: 2px solid #dce2ec;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #ffdb49;\n  outline: none;\n  padding: 10px;\n  margin-bottom: 30px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 10%;\n  background-color: #fff;\n  border: 2px solid #dce2ec;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #ffdb49;\n  outline: none;\n  padding: 10px;\n  margin-bottom: 30px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']);
 
@@ -31387,14 +31386,15 @@ function _taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw; return s
 
 
 
+// API
+
 
 // Get Components
 
 
 
-var Wrapper = __WEBPACK_IMPORTED_MODULE_2_styled_components__["a" /* default */].div(_templateObject);
-
-var AddButton = __WEBPACK_IMPORTED_MODULE_2_styled_components__["a" /* default */].button(_templateObject2);
+var Wrapper = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].div(_templateObject);
+var AddButton = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].button(_templateObject2);
 
 var Admin = function (_Component) {
   _inherits(Admin, _Component);
@@ -31413,6 +31413,9 @@ var Admin = function (_Component) {
       member: {},
       showForm: false,
       hasError: false
+
+      // Form Handlers
+      // Add Button
     }, _this.handleAdd = function () {
       _this.setState(function () {
         return {
@@ -31429,17 +31432,68 @@ var Admin = function (_Component) {
           hasError: false
         };
       });
+    }, _this.handleSubmit = function () {
+      var isMember = !_this.state.member.id;
+      var url = _this.props.url + (isMember ? '' : '/' + _this.state.member.id);
+      var data = _this.state.member;
+
+      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* endpointReuqest */])(url, data).then(function (newMember) {
+        if (isMember) {
+          var team = _this.state.team;
+          var newTeam = [member].concat(team);
+          _this.setState(function () {
+            return {
+              member: member
+            };
+          });
+          console.log(newMember);
+        }
+        _this.setState({ showForm: false, member: {}, hasError: false });
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }, _this.handleChange = function (member) {
+      _this.setState(function () {
+        return {
+          member: member
+        };
+      });
+    }, _this.handleError = function () {
+      _this.setState({ hasFormError: true });
+    }, _this.handleMemberEdit = function (i) {
+      var member = _this.state.team[i];
+      _this.setState({
+        member: member,
+        showForm: true
+      });
+    }, _this.handleDelete = function (id, index) {
+      var url = _this.props.url + '/' + id;
+      var team = _this.state.team;
+      team.splice(index, 1);
+      _this.setState({ team: team });
+      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* endpointReuqest */])('DELETE', url, {});
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
+  // Cancel Button
+
+  // Adding New Member handler
+
+  //Handle Form Errors
+
+
+  // Team Members (Edit, Delete) Handlers
+  // Edit click handler
+
+  // Delete Click Handler
+
 
   // Loads team members from API
   Admin.prototype.componentDidMount = function componentDidMount() {
     var _this2 = this;
 
-    __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.props.url).then(function (response) {
-      _this2.setState({ team: response.data });
-    }).catch(function (error) {
-      console.log(error);
+    Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["b" /* fetchTeam */])(this.props.url).then(function (response) {
+      _this2.setState({ team: response });
+      console.log(response);
     });
   };
 
@@ -31459,8 +31513,18 @@ var Admin = function (_Component) {
         { onClick: this.handleAdd },
         'Add Member'
       ),
-      this.state.showForm ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Form__["a" /* default */], { member: member, onCancel: this.handleCancel }) : null,
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__TeamMemberList__["a" /* default */], { team: this.state.team, edit: this.handleEditMember, 'delete': this.handleDeleteMember })
+      this.state.showForm ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Form__["a" /* default */], {
+        member: member,
+        handleCancel: this.handleCancel,
+        handleSubmit: this.handleSubmit,
+        handleChange: this.handleChange,
+        handleError: this.handleError
+      }) : null,
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__TeamMemberList__["a" /* default */], {
+        team: this.state.team,
+        handleEdit: this.handleMemberEdit,
+        handleDelete: this.handleDeleteMember
+      })
     );
   };
 
@@ -31474,10 +31538,42 @@ var Admin = function (_Component) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+
+
+const fetchTeam = url => {
+  return __WEBPACK_IMPORTED_MODULE_0_axios___default.a
+    .get(url)
+    .then(response => response.data)
+    .catch(error => error)
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = fetchTeam;
+
+
+const endpointReuqest = (url, data) => {
+  return __WEBPACK_IMPORTED_MODULE_0_axios___default.a
+    .post(url, data)
+    .then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = endpointReuqest;
+
+
+
+/***/ }),
+/* 116 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_styled_components__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TeamMember__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TeamMember__ = __webpack_require__(117);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _templateObject = _taggedTemplateLiteralLoose(['\n  border-spacing: 0 10px;\n  table-layout: fixed;\n  width: 100%;\n'], ['\n  border-spacing: 0 10px;\n  table-layout: fixed;\n  width: 100%;\n']),
@@ -31506,18 +31602,27 @@ var TeamMemberList = function (_Component) {
   _inherits(TeamMemberList, _Component);
 
   function TeamMemberList() {
+    var _temp, _this, _ret;
+
     _classCallCheck(this, TeamMemberList);
 
-    return _possibleConstructorReturn(this, _Component.apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleEdit = function (member) {
+      return function (idx) {
+        _this.props.handleEdit(idx);
+        console.log(member + ' is now editing...');
+        return;
+      };
+    }, _this.handleDelete = function (id, idx) {
+      _this.props.handleDelete(id, idx);
+      return;
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
-  TeamMemberList.prototype.handelEditMember = function handelEditMember() {};
-
   TeamMemberList.prototype.render = function render() {
-    var allMembers = this.props.team.map(function (member) {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TeamMember__["a" /* default */], _extends({ key: member.id }, member));
-    });
-
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Table,
       null,
@@ -31557,7 +31662,9 @@ var TeamMemberList = function (_Component) {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         Tbody,
         null,
-        allMembers
+        this.props.team.map(function (member) {
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TeamMember__["a" /* default */], _extends({ key: member.id }, member));
+        })
       )
     );
   };
@@ -31568,7 +31675,7 @@ var TeamMemberList = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (TeamMemberList);
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31602,9 +31709,21 @@ var TeamMember = function (_Component) {
   _inherits(TeamMember, _Component);
 
   function TeamMember() {
+    var _temp, _this, _ret;
+
     _classCallCheck(this, TeamMember);
 
-    return _possibleConstructorReturn(this, _Component.apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleEdit = function () {
+      _this.props.handleEdit(_this.props.index);
+      return;
+    }, _this.handleDelete = function () {
+      _this.props.handleDelete(_this.props.id, _this.props.index);
+      return;
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   TeamMember.prototype.render = function render() {
@@ -31636,12 +31755,12 @@ var TeamMember = function (_Component) {
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           ButtonEdit,
-          null,
+          { onClick: this.handleEdit },
           'Edit'
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           ButtonEdit,
-          null,
+          { onClick: this.handleDelete },
           'Delete'
         )
       )
@@ -31654,7 +31773,7 @@ var TeamMember = function (_Component) {
 /* harmony default export */ __webpack_exports__["a"] = (TeamMember);
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31709,22 +31828,33 @@ var componentName = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleCancel = function (e) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleChange = function (e) {
+      var member = _this.props.member;
+      member[e.target.id] = e.target.value.trim();
+      console.log(member);
+      _this.props.handleChange(member);
+      return;
+    }, _this.handleFormSubmit = function (e) {
       e.preventDefault();
-      _this.props.onCancel();
+      if (!_this.props.member.first_name || !_this.props.member.last_name || !_this.props.member.team || !_this.props.member.color || !_this.props.member.image || !_this.props.member.location) {
+        _this.props.handleError();
+        return;
+      }
+      _this.props.handleSubmit();
+      return;
+    }, _this.handleCancel = function (e) {
+      e.preventDefault();
+      _this.props.handleCancel();
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
+  //Input Change handler
 
-  componentName.prototype.handleFormSubmit = function handleFormSubmit(e) {
-    e.preventDefault();
-    if (!this.props.member.first_name || !this.props.member.last_name || !this.props.member.team || !this.props.member.color || !this.props.member.image || !this.props.member.location) {
-      this.props.onFormError();
-      return;
-    }
-    this.props.onMemberSubmit();
-    return;
-  };
+
+  //Form Submit Handler
+
+  // Form Cancel Handler
+
 
   componentName.prototype.render = function render() {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -31732,7 +31862,7 @@ var componentName = function (_Component) {
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         Form,
-        null,
+        { onSubmit: this.handleFormSubmit },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
           null,
@@ -31741,14 +31871,7 @@ var componentName = function (_Component) {
             { htmlFor: 'first_name' },
             'First Name'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'first_name',
-            type: 'text',
-            placeholder: 'First Name',
-            value: this.props.member.first_name,
-            onChange: this.handleChange,
-            autoFocus: true
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'first_name', type: 'text', placeholder: 'First Name', onChange: this.handleChange, autoFocus: true })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31758,13 +31881,7 @@ var componentName = function (_Component) {
             { htmlFor: 'last_name' },
             'Last Name'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'last_name',
-            type: 'text',
-            placeholder: 'Last Name',
-            value: this.props.member.last_name,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'last_name', type: 'text', placeholder: 'Last Name', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31774,13 +31891,7 @@ var componentName = function (_Component) {
             { htmlFor: 'title' },
             'Title'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'title',
-            type: 'text',
-            placeholder: 'Title',
-            value: this.props.member.title,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'title', type: 'text', placeholder: 'Title', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31790,13 +31901,7 @@ var componentName = function (_Component) {
             { htmlFor: 'team' },
             'Team'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'team',
-            type: 'text',
-            placeholder: 'Team',
-            value: this.props.member.team,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'team', type: 'text', placeholder: 'Team', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31806,13 +31911,7 @@ var componentName = function (_Component) {
             { htmlFor: 'color' },
             'Color'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'color',
-            type: 'text',
-            placeholder: 'Color',
-            value: this.props.member.color,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'color', type: 'text', placeholder: 'Color', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31822,13 +31921,7 @@ var componentName = function (_Component) {
             { htmlFor: 'image' },
             'Image'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'image',
-            type: 'text',
-            placeholder: 'Image',
-            value: this.props.member.image,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'image', type: 'text', placeholder: 'Image', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31838,13 +31931,7 @@ var componentName = function (_Component) {
             { htmlFor: 'Location' },
             'Location'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, {
-            id: 'location',
-            type: 'text',
-            placeholder: 'Location',
-            value: this.props.member.location,
-            onChange: this.handleChange
-          })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'location', type: 'text', placeholder: 'Location', onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
