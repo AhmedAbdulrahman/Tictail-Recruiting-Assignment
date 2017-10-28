@@ -14,6 +14,7 @@
   ],
   "plugins": [
     // Add class properties onto ES6 Classes so that we do need to bind function within the Constructor
-    "babel-plugin-transform-class-properties"
+    "babel-plugin-transform-class-properties",
+    "transform-object-rest-spread"
   ]
 }
