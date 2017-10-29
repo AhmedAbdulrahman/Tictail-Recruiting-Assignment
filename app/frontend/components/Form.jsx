@@ -9,7 +9,7 @@ const Container = styled.div`
     box-sizing: border-box;
   }
 `
-const Form = styled.form`
+const MemberForm = styled.form`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -37,19 +37,22 @@ const Input = styled.input.attrs({
     box-shadow: inset 0 1px 1px rgba(255, 229, 124, 0.79);
   }
 `
-
 const FormGroup = styled.div`
   margin-bottom: 0;
   margin-right: 10px;
   padding: 10px 0;
   width: 20%;
 `
-
 const Label = styled.label`
   display: inline-block;
   max-width: 100%;
   margin-bottom: 5px;
   font-weight: 700;
+`
+const Error = styled.p`
+  color: #f81763;
+  font-size: 14px;
+  margin-top: 0;
 `
 const ButtonWrapper = styled.div`
   display: flex;
@@ -76,7 +79,6 @@ const SubmitButton = styled.input.attrs({
     color: #000000;
   }
 `
-
 const CancelButton = styled.button`
   width: 45%;
   background-color: #ffdb49;
@@ -94,33 +96,48 @@ const CancelButton = styled.button`
     color: #000000;
   }
 `
+class Form extends Component {
+  // state = {
+  //   first_name: '',
+  //   last_name: '',
+  //   title: '',
+  //   team: '',
+  //   color: '',
+  //   image: '',
+  //   location: ''
+  // }
 
-class componentName extends Component {
   //Input Change handler
-  handleChange = e => {
+  change = e => {
     const member = this.props.member
-    member[e.target.id] = e.target.value.trim()
-    console.log(member)
-    this.props.handleChange(member)
+    member[e.target.name] = e.target.value.trim()
+    this.props.onChange(member)
+    // this.props.onChange({ [e.target.name]: e.target.value.trim() })
+    // this.setState({
+    //   [e.target.name]: e.target.value.trim()
+    // })
+
     return
   }
-
   //Form Submit Handler
-  handleFormSubmit = e => {
+  onSubmit = e => {
     e.preventDefault()
+    const { state } = this
     if (
-      !this.props.member.first_name ||
-      !this.props.member.last_name ||
-      !this.props.member.team ||
-      !this.props.member.color ||
-      !this.props.member.image ||
-      !this.props.member.location
+      !state.first_name ||
+      !state.last_name ||
+      !state.team ||
+      !state.title ||
+      !state.color ||
+      !state.image ||
+      !state.location
     ) {
       this.props.handleError()
       return
     }
-    this.props.handleSubmit()
-    return
+    this.props.onSubmit(this.state)
+    //Clear Input Fields
+    this.refs.MemberForm.reset()
   }
   // Form Cancel Handler
   handleCancel = e => {
@@ -129,54 +146,56 @@ class componentName extends Component {
     return
   }
   render() {
+    const { member } = this.props
     return (
       <Container>
-        <Form onSubmit={this.handleFormSubmit}>
+        <MemberForm ref="memberForm">
           <FormGroup>
             <Label htmlFor="first_name">First Name</Label>
-            <Input id="first_name" type="text" placeholder="First Name" onChange={this.handleChange} autoFocus />
+            <Input name="first_name" type="text" value={member.first_name} onChange={e => this.change(e)} autoFocus />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="last_name">Last Name</Label>
-            <Input id="last_name" type="text" placeholder="Last Name" onChange={this.handleChange} />
+            <Input name="last_name" type="text" value={member.last_name} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="title">Title</Label>
-            <Input id="title" type="text" placeholder="Title" onChange={this.handleChange} />
+            <Input name="title" type="text" value={member.title} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="team">Team</Label>
-            <Input id="team" type="text" placeholder="Team" onChange={this.handleChange} />
+            <Input name="team" type="text" value={member.team} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="color">Color</Label>
-            <Input id="color" type="text" placeholder="Color" onChange={this.handleChange} />
+            <Input name="color" type="text" value={member.color} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="image">Image</Label>
-            <Input id="image" type="text" placeholder="Image" onChange={this.handleChange} />
+            <Input name="image" type="text" value={member.image} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
           <FormGroup>
             <Label htmlFor="Location">Location</Label>
-            <Input id="location" type="text" placeholder="Location" onChange={this.handleChange} />
+            <Input name="location" type="text" value={member.location} onChange={e => this.change(e)} />
+            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
           <FormGroup>
-            <Input type="text" ref="id" hidden value={this.props.member.id} onChange={this.handleChange} />
-            {this.props.hasError ? <p className="error">Please fill in all required fields (*).</p> : null}
+            {/* <Input type="text" ref="id" hidden value={this.id} onChange={e => this.change(e)} /> */}
             <ButtonWrapper>
-              <SubmitButton type="submit" value="Submit" />
+              <SubmitButton type="submit" value="Submit" onClick={e => this.onSubmit(e)} />
               <CancelButton onClick={this.handleCancel}>Cancel</CancelButton>
             </ButtonWrapper>
           </FormGroup>
-        </Form>
+        </MemberForm>
       </Container>
     )
   }
 }
 
-export default componentName
+export default Form

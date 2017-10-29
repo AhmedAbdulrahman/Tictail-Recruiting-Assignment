@@ -31372,6 +31372,8 @@ var Spinner = function Spinner() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TeamMemberList__ = __webpack_require__(116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Form__ = __webpack_require__(118);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _templateObject = _taggedTemplateLiteralLoose(['\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: 1200px;\n  margin: 0 auto;\n'], ['\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: 1200px;\n  margin: 0 auto;\n']),
     _templateObject2 = _taggedTemplateLiteralLoose(['\n  width: 10%;\n  background-color: #fff;\n  border: 2px solid #dce2ec;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #ffdb49;\n  outline: none;\n  padding: 10px;\n  margin-bottom: 30px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 10%;\n  background-color: #fff;\n  border: 2px solid #dce2ec;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #ffdb49;\n  outline: none;\n  padding: 10px;\n  margin-bottom: 30px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']);
 
@@ -31410,19 +31412,33 @@ var Admin = function (_Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.state = {
       team: [],
-      member: {},
+      member: {
+        first_name: '',
+        last_name: '',
+        title: '',
+        team: '',
+        color: '',
+        image: '',
+        location: ''
+      },
       showForm: false,
-      hasError: false
+      hasError: false,
+      isSuccess: false
 
       // Form Handlers
       // Add Button
     }, _this.handleAdd = function () {
-      _this.setState(function () {
-        return {
-          member: {},
-          showForm: true,
-          hasError: true
-        };
+      _this.setState({
+        member: {
+          first_name: '',
+          last_name: '',
+          title: '',
+          team: '',
+          color: '',
+          image: '',
+          location: ''
+        },
+        showForm: true
       });
     }, _this.handleCancel = function () {
       _this.setState(function () {
@@ -31432,98 +31448,110 @@ var Admin = function (_Component) {
           hasError: false
         };
       });
-    }, _this.handleSubmit = function () {
-      var isMember = !_this.state.member.id;
-      var url = _this.props.url + (isMember ? '' : '/' + _this.state.member.id);
-      var data = _this.state.member;
-
-      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* endpointReuqest */])(url, data).then(function (newMember) {
-        if (isMember) {
-          var team = _this.state.team;
-          var newTeam = [member].concat(team);
-          _this.setState(function () {
-            return {
-              member: member
-            };
-          });
-          console.log(newMember);
-        }
-        _this.setState({ showForm: false, member: {}, hasError: false });
+    }, _this.showForm = function () {
+      _this.setState({ showForm: true, hasError: false });
+    }, _this.onSubmit = function (fields) {
+      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["b" /* endpointReuqest */])(_this.props.url, fields).then(function (newMember) {
+        _this.setState({
+          team: [newMember].concat(_this.state.team),
+          isSuccess: true
+        });
+        console.log('Member is saved', newMember);
       }).catch(function (error) {
-        console.log(error);
+        console.log('ERROR', error);
       });
-    }, _this.handleChange = function (member) {
-      _this.setState(function () {
-        return {
-          member: member
-        };
+    }, _this.onChange = function (updatedValue) {
+      console.log(updatedValue);
+      _this.setState({
+        member: _extends({}, _this.state.member, updatedValue)
       });
     }, _this.handleError = function () {
-      _this.setState({ hasFormError: true });
-    }, _this.handleMemberEdit = function (i) {
-      var member = _this.state.team[i];
-      _this.setState({
-        member: member,
-        showForm: true
-      });
-    }, _this.handleDelete = function (id, index) {
+      _this.setState({ hasError: true });
+    }, _this.onEdit = function (index) {
+      var member = _this.state.team[index];
+      console.log(member);
+      _this.setState({ member: member || {} });
+      _this.showForm();
+    }, _this.onDelete = function (id) {
       var url = _this.props.url + '/' + id;
       var team = _this.state.team;
-      team.splice(index, 1);
-      _this.setState({ team: team });
-      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* endpointReuqest */])('DELETE', url, {});
+      //Find member if get match
+      var member = team.find(function (member) {
+        return member.id === id;
+      });
+
+      //Remove is from the team
+      team.splice(member, 1);
+
+      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* deleteRequest */])(url).then(function (response) {
+        _this.setState({
+          team: team.filter(function (member) {
+            return member.id !== id;
+          })
+        });
+      }).catch(function (error) {
+        return console.log('ERROR', error);
+      });
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
   // Cancel Button
 
   // Adding New Member handler
 
+
   //Handle Form Errors
 
 
-  // Team Members (Edit, Delete) Handlers
   // Edit click handler
 
-  // Delete Click Handler
+
+  // Delete Member
 
 
   // Loads team members from API
   Admin.prototype.componentDidMount = function componentDidMount() {
     var _this2 = this;
 
-    Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["b" /* fetchTeam */])(this.props.url).then(function (response) {
+    Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["c" /* fetchTeam */])(this.props.url).then(function (response) {
       _this2.setState({ team: response });
-      console.log(response);
+      ///console.log(response)
     });
   };
 
   Admin.prototype.render = function render() {
-    var member = this.state.member;
+    var _this3 = this;
 
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Wrapper,
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h1',
-        null,
-        'Tictail Team Manager'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         AddButton,
         { onClick: this.handleAdd },
         'Add Member'
       ),
-      this.state.showForm ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Form__["a" /* default */], {
-        member: member,
-        handleCancel: this.handleCancel,
-        handleSubmit: this.handleSubmit,
-        handleChange: this.handleChange,
-        handleError: this.handleError
-      }) : null,
+      this.state.showForm ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Form__["a" /* default */], {
+          member: this.state.member,
+          handleCancel: this.handleCancel,
+          onSubmit: function onSubmit(fields) {
+            return _this3.onSubmit(fields);
+          },
+          onChange: function onChange(fields) {
+            return _this3.onChange(fields);
+          },
+          handleError: this.handleError,
+          onSuccess: this.state.isSuccess,
+          hasFormError: this.state.hasError
+        })
+      ) : null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__TeamMemberList__["a" /* default */], {
         team: this.state.team,
-        handleEdit: this.handleMemberEdit,
-        handleDelete: this.handleDeleteMember
+        onEdit: this.onEdit,
+        onDelete: function onDelete(id, index) {
+          return _this3.onDelete(id, index);
+        }
       })
     );
   };
@@ -31548,20 +31576,25 @@ const fetchTeam = url => {
     .then(response => response.data)
     .catch(error => error)
 }
-/* harmony export (immutable) */ __webpack_exports__["b"] = fetchTeam;
+/* harmony export (immutable) */ __webpack_exports__["c"] = fetchTeam;
 
 
 const endpointReuqest = (url, data) => {
   return __WEBPACK_IMPORTED_MODULE_0_axios___default.a
     .post(url, data)
-    .then(response => {
-      console.log(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    .then(response => response)
+    .catch(error => error)
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = endpointReuqest;
+/* harmony export (immutable) */ __webpack_exports__["b"] = endpointReuqest;
+
+
+const deleteRequest = url => {
+  return __WEBPACK_IMPORTED_MODULE_0_axios___default.a
+    .delete(url)
+    .then(response => response)
+    .catch(error => error)
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = deleteRequest;
 
 
 
@@ -31574,12 +31607,13 @@ const endpointReuqest = (url, data) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_styled_components__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TeamMember__ = __webpack_require__(117);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _templateObject = _taggedTemplateLiteralLoose(['\n  border-spacing: 0 10px;\n  table-layout: fixed;\n  width: 100%;\n'], ['\n  border-spacing: 0 10px;\n  table-layout: fixed;\n  width: 100%;\n']),
     _templateObject2 = _taggedTemplateLiteralLoose(['\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n'], ['\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n']),
     _templateObject3 = _taggedTemplateLiteralLoose(['\n\t& tr {\n\t\tbackground-color: #fff;\n\t\tbox-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);\n'], ['\n\t& tr {\n\t\tbackground-color: #fff;\n\t\tbox-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);\n']),
-    _templateObject4 = _taggedTemplateLiteralLoose(['\n  padding: 10px;\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n  color: #8399a3;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  white-space: nowrap;\n'], ['\n  padding: 10px;\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n  color: #8399a3;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  white-space: nowrap;\n']);
+    _templateObject4 = _taggedTemplateLiteralLoose(['\n  padding: 10px;\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n  color: #8399a3;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  white-space: nowrap;\n'], ['\n  padding: 10px;\n  border: 0;\n  outline: 0;\n  background-color: transparent;\n  color: #8399a3;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  white-space: nowrap;\n']),
+    _templateObject5 = _taggedTemplateLiteralLoose(['\n  td {\n    padding: 15px;\n    text-align: center;\n  }\n  td:first-child {\n    border-radius: 2px 0 0 2px;\n  }\n  td:last-child {\n    border-radius: 0 2px 2px 0;\n    overflow: visible;\n    white-space: normal;\n  }\n'], ['\n  td {\n    padding: 15px;\n    text-align: center;\n  }\n  td:first-child {\n    border-radius: 2px 0 0 2px;\n  }\n  td:last-child {\n    border-radius: 0 2px 2px 0;\n    overflow: visible;\n    white-space: normal;\n  }\n']),
+    _templateObject6 = _taggedTemplateLiteralLoose(['\n  text-align: center;\n  border: 1px solid #dddddd;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n'], ['\n  text-align: center;\n  border: 1px solid #dddddd;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n']),
+    _templateObject7 = _taggedTemplateLiteralLoose(['\n  width: 40%;\n  background-color: #ffe57c;\n  font-size: 14px;\n  color: #3d4041;\n  border: 0;\n  border-radius: 2px;\n  outline: none;\n  padding: 10px;\n  margin-right: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    background-color: #ffdb49;\n    border-color: #cccccc;\n    color: #000000;\n  }\n'], ['\n  width: 40%;\n  background-color: #ffe57c;\n  font-size: 14px;\n  color: #3d4041;\n  border: 0;\n  border-radius: 2px;\n  outline: none;\n  padding: 10px;\n  margin-right: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    background-color: #ffdb49;\n    border-color: #cccccc;\n    color: #000000;\n  }\n']);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -31597,6 +31631,9 @@ var Table = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].t
 var Thead = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].thead(_templateObject2);
 var Tbody = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].tbody(_templateObject3);
 var Th = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].th(_templateObject4);
+var Tr = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].tr(_templateObject5);
+var Td = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].td(_templateObject6);
+var ButtonEdit = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].button(_templateObject7);
 
 var TeamMemberList = function (_Component) {
   _inherits(TeamMemberList, _Component);
@@ -31610,19 +31647,33 @@ var TeamMemberList = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleEdit = function (member) {
-      return function (idx) {
-        _this.props.handleEdit(idx);
-        console.log(member + ' is now editing...');
-        return;
-      };
-    }, _this.handleDelete = function (id, idx) {
-      _this.props.handleDelete(id, idx);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.editMember = function (index) {
+      console.log(index);
+      _this.props.onEdit(index);
+      return;
+    }, _this.deleteMember = function (id) {
+      _this.props.onDelete(id);
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   TeamMemberList.prototype.render = function render() {
+    var rows = this.props.team.map(function (member, index) {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TeamMember__["a" /* default */], {
+        id: member.id,
+        key: member.id,
+        onEdit: function onEdit(index) {
+          return _this2.editMember(index);
+        },
+        onDelete: function onDelete(id) {
+          return _this2.deleteMember(member.id);
+        },
+        index: index,
+        member: member
+      });
+    }, this);
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Table,
       null,
@@ -31662,9 +31713,7 @@ var TeamMemberList = function (_Component) {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         Tbody,
         null,
-        this.props.team.map(function (member) {
-          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TeamMember__["a" /* default */], _extends({ key: member.id }, member));
-        })
+        rows
       )
     );
   };
@@ -31717,11 +31766,12 @@ var TeamMember = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleEdit = function () {
-      _this.props.handleEdit(_this.props.index);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.editMember = function () {
+      _this.props.onEdit(_this.props.index);
+      console.log(_this.props.index);
       return;
-    }, _this.handleDelete = function () {
-      _this.props.handleDelete(_this.props.id, _this.props.index);
+    }, _this.deleteMember = function () {
+      _this.props.handleDelete(_this.props.id);
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -31729,38 +31779,38 @@ var TeamMember = function (_Component) {
   TeamMember.prototype.render = function render() {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Tr,
-      null,
+      { id: this.props.id },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         null,
-        this.props.first_name || 'N/A'
+        this.props.member.first_name || 'N/A'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         null,
-        this.props.last_name || 'N/A'
+        this.props.member.last_name || 'N/A'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         { colSpan: '2' },
-        this.props.title || 'N/A'
+        this.props.member.title || 'N/A'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         null,
-        this.props.team || 'N/A'
+        this.props.member.team || 'N/A'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           ButtonEdit,
-          { onClick: this.handleEdit },
+          { onClick: this.editMember },
           'Edit'
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           ButtonEdit,
-          { onClick: this.handleDelete },
+          { onClick: this.deleteMember },
           'Delete'
         )
       )
@@ -31785,9 +31835,10 @@ var _templateObject = _taggedTemplateLiteralLoose(['\n  width: 100%;\n  max-widt
     _templateObject3 = _taggedTemplateLiteralLoose(['\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  border-width: 2px;\n  outline: 0;\n  width: 100%;\n  min-height: 40px;\n  height: auto;\n  padding: 0 20px;\n  margin: 0 10px 13px 0;\n  font-size: 12px;\n  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\n  &:focus {\n    border: 1px solid rgba(255, 229, 124, 0.79);\n    border-width: 2px;\n    box-shadow: inset 0 1px 1px rgba(255, 229, 124, 0.79);\n  }\n'], ['\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  border-width: 2px;\n  outline: 0;\n  width: 100%;\n  min-height: 40px;\n  height: auto;\n  padding: 0 20px;\n  margin: 0 10px 13px 0;\n  font-size: 12px;\n  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);\n  &:focus {\n    border: 1px solid rgba(255, 229, 124, 0.79);\n    border-width: 2px;\n    box-shadow: inset 0 1px 1px rgba(255, 229, 124, 0.79);\n  }\n']),
     _templateObject4 = _taggedTemplateLiteralLoose(['\n  margin-bottom: 0;\n  margin-right: 10px;\n  padding: 10px 0;\n  width: 20%;\n'], ['\n  margin-bottom: 0;\n  margin-right: 10px;\n  padding: 10px 0;\n  width: 20%;\n']),
     _templateObject5 = _taggedTemplateLiteralLoose(['\n  display: inline-block;\n  max-width: 100%;\n  margin-bottom: 5px;\n  font-weight: 700;\n'], ['\n  display: inline-block;\n  max-width: 100%;\n  margin-bottom: 5px;\n  font-weight: 700;\n']),
-    _templateObject6 = _taggedTemplateLiteralLoose(['\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  justify-content: space-between;\n'], ['\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  justify-content: space-between;\n']),
-    _templateObject7 = _taggedTemplateLiteralLoose(['\n  width: 45%;\n  background-color: #ffeea8;\n  border: 2px solid #ffdb49;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 45%;\n  background-color: #ffeea8;\n  border: 2px solid #ffdb49;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']),
-    _templateObject8 = _taggedTemplateLiteralLoose(['\n  width: 45%;\n  background-color: #ffdb49;\n  border: 2px solid #f4d34d;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 45%;\n  background-color: #ffdb49;\n  border: 2px solid #f4d34d;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']);
+    _templateObject6 = _taggedTemplateLiteralLoose(['\n  color: #f81763;\n  font-size: 14px;\n  margin-top: 0;\n'], ['\n  color: #f81763;\n  font-size: 14px;\n  margin-top: 0;\n']),
+    _templateObject7 = _taggedTemplateLiteralLoose(['\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  justify-content: space-between;\n'], ['\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  justify-content: space-between;\n']),
+    _templateObject8 = _taggedTemplateLiteralLoose(['\n  width: 45%;\n  background-color: #ffeea8;\n  border: 2px solid #ffdb49;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 45%;\n  background-color: #ffeea8;\n  border: 2px solid #ffdb49;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']),
+    _templateObject9 = _taggedTemplateLiteralLoose(['\n  width: 45%;\n  background-color: #ffdb49;\n  border: 2px solid #f4d34d;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n'], ['\n  width: 45%;\n  background-color: #ffdb49;\n  border: 2px solid #f4d34d;\n  border-radius: 2px;\n  font-size: 14px;\n  color: #232728;\n  text-transform: uppercase;\n  outline: none;\n  padding: 10px;\n  transition: all 0.1s;\n  cursor: pointer;\n  &:hover {\n    border-color: #ddc76b;\n    color: #000000;\n  }\n']);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -31801,68 +31852,87 @@ function _taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw; return s
 
 
 var Container = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].div(_templateObject);
-var Form = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].form(_templateObject2);
+var MemberForm = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].form(_templateObject2);
 var Input = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].input.attrs({
   type: 'text'
 })(_templateObject3);
-
 var FormGroup = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].div(_templateObject4);
-
 var Label = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].label(_templateObject5);
-var ButtonWrapper = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].div(_templateObject6);
+var Error = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].p(_templateObject6);
+var ButtonWrapper = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].div(_templateObject7);
 var SubmitButton = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].input.attrs({
   type: 'submit'
-})(_templateObject7);
+})(_templateObject8);
+var CancelButton = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].button(_templateObject9);
 
-var CancelButton = __WEBPACK_IMPORTED_MODULE_1_styled_components__["a" /* default */].button(_templateObject8);
+var Form = function (_Component) {
+  _inherits(Form, _Component);
 
-var componentName = function (_Component) {
-  _inherits(componentName, _Component);
-
-  function componentName() {
+  function Form() {
     var _temp, _this, _ret;
 
-    _classCallCheck(this, componentName);
+    _classCallCheck(this, Form);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.handleChange = function (e) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.change = function (e) {
       var member = _this.props.member;
-      member[e.target.id] = e.target.value.trim();
-      console.log(member);
-      _this.props.handleChange(member);
+      member[e.target.name] = e.target.value.trim();
+      _this.props.onChange(member);
+      // this.props.onChange({ [e.target.name]: e.target.value.trim() })
+      // this.setState({
+      //   [e.target.name]: e.target.value.trim()
+      // })
+
       return;
-    }, _this.handleFormSubmit = function (e) {
+    }, _this.onSubmit = function (e) {
       e.preventDefault();
-      if (!_this.props.member.first_name || !_this.props.member.last_name || !_this.props.member.team || !_this.props.member.color || !_this.props.member.image || !_this.props.member.location) {
+      var _this2 = _this,
+          state = _this2.state;
+
+      if (!state.first_name || !state.last_name || !state.team || !state.title || !state.color || !state.image || !state.location) {
         _this.props.handleError();
         return;
       }
-      _this.props.handleSubmit();
-      return;
+      _this.props.onSubmit(_this.state);
+      //Clear Input Fields
+      _this.refs.MemberForm.reset();
     }, _this.handleCancel = function (e) {
       e.preventDefault();
       _this.props.handleCancel();
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
-  //Input Change handler
+  // state = {
+  //   first_name: '',
+  //   last_name: '',
+  //   title: '',
+  //   team: '',
+  //   color: '',
+  //   image: '',
+  //   location: ''
+  // }
 
+  //Input Change handler
 
   //Form Submit Handler
 
   // Form Cancel Handler
 
 
-  componentName.prototype.render = function render() {
+  Form.prototype.render = function render() {
+    var _this3 = this;
+
+    var member = this.props.member;
+
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Container,
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        Form,
-        { onSubmit: this.handleFormSubmit },
+        MemberForm,
+        { ref: 'memberForm' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
           null,
@@ -31871,7 +31941,14 @@ var componentName = function (_Component) {
             { htmlFor: 'first_name' },
             'First Name'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'first_name', type: 'text', placeholder: 'First Name', onChange: this.handleChange, autoFocus: true })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'first_name', type: 'text', value: member.first_name, onChange: function onChange(e) {
+              return _this3.change(e);
+            }, autoFocus: true }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31881,7 +31958,14 @@ var componentName = function (_Component) {
             { htmlFor: 'last_name' },
             'Last Name'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'last_name', type: 'text', placeholder: 'Last Name', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'last_name', type: 'text', value: member.last_name, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31891,7 +31975,14 @@ var componentName = function (_Component) {
             { htmlFor: 'title' },
             'Title'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'title', type: 'text', placeholder: 'Title', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'title', type: 'text', value: member.title, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31901,7 +31992,14 @@ var componentName = function (_Component) {
             { htmlFor: 'team' },
             'Team'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'team', type: 'text', placeholder: 'Team', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'team', type: 'text', value: member.team, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31911,7 +32009,14 @@ var componentName = function (_Component) {
             { htmlFor: 'color' },
             'Color'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'color', type: 'text', placeholder: 'Color', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'color', type: 'text', value: member.color, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31921,7 +32026,14 @@ var componentName = function (_Component) {
             { htmlFor: 'image' },
             'Image'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'image', type: 'text', placeholder: 'Image', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'image', type: 'text', value: member.image, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
@@ -31931,21 +32043,24 @@ var componentName = function (_Component) {
             { htmlFor: 'Location' },
             'Location'
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { id: 'location', type: 'text', placeholder: 'Location', onChange: this.handleChange })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'location', type: 'text', value: member.location, onChange: function onChange(e) {
+              return _this3.change(e);
+            } }),
+          this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            Error,
+            { className: 'error' },
+            'Field is required.'
+          ) : null
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
           null,
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { type: 'text', ref: 'id', hidden: true, value: this.props.member.id, onChange: this.handleChange }),
-          this.props.hasError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'p',
-            { className: 'error' },
-            'Please fill in all required fields (*).'
-          ) : null,
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             ButtonWrapper,
             null,
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SubmitButton, { type: 'submit', value: 'Submit' }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SubmitButton, { type: 'submit', value: 'Submit', onClick: function onClick(e) {
+                return _this3.onSubmit(e);
+              } }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               CancelButton,
               { onClick: this.handleCancel },
@@ -31957,10 +32072,10 @@ var componentName = function (_Component) {
     );
   };
 
-  return componentName;
+  return Form;
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
 
-/* harmony default export */ __webpack_exports__["a"] = (componentName);
+/* harmony default export */ __webpack_exports__["a"] = (Form);
 
 /***/ })
 /******/ ]);

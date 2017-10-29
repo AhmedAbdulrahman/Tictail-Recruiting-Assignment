@@ -10,10 +10,13 @@ export const fetchTeam = url => {
 export const endpointReuqest = (url, data) => {
   return axios
     .post(url, data)
-    .then(response => {
-      console.log(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    .then(response => response)
+    .catch(error => error)
+}
+
+export const deleteRequest = url => {
+  return axios
+    .delete(url)
+    .then(response => response)
+    .catch(error => error)
 }

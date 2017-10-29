@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 // API
-import { fetchTeam, endpointReuqest } from '../utils/api'
+import { fetchTeam, endpointReuqest, deleteRequest } from '../utils/api'
 
 // Get Components
 import TeamMemberList from './TeamMemberList'
@@ -35,20 +35,34 @@ const AddButton = styled.button`
 class Admin extends Component {
   state = {
     team: [],
-    member: {},
+    member: {
+      first_name: '',
+      last_name: '',
+      title: '',
+      team: '',
+      color: '',
+      image: '',
+      location: ''
+    },
     showForm: false,
-    hasError: false
+    hasError: false,
+    isSuccess: false
   }
 
   // Form Handlers
   // Add Button
   handleAdd = () => {
-    this.setState(() => {
-      return {
-        member: {},
-        showForm: true,
-        hasError: true
-      }
+    this.setState({
+      member: {
+        first_name: '',
+        last_name: '',
+        title: '',
+        team: '',
+        color: '',
+        image: '',
+        location: ''
+      },
+      showForm: true
     })
   }
   // Cancel Button
@@ -61,88 +75,99 @@ class Admin extends Component {
       }
     })
   }
-  // Adding New Member handler
-  handleSubmit = () => {
-    const isMember = !this.state.member.id
-    const url = this.props.url + (isMember ? '' : '/' + this.state.member.id)
-    const data = this.state.member
 
-    endpointReuqest(url, data)
+  showForm = () => {
+    this.setState({ showForm: true, hasError: false })
+  }
+  // Adding New Member handler
+  onSubmit = fields => {
+    endpointReuqest(this.props.url, fields)
       .then(newMember => {
-        if (isMember) {
-          const team = this.state.team
-          const newTeam = [member].concat(team)
-          this.setState(() => {
-            return {
-              member: member
-            }
-          })
-          console.log(newMember)
-        }
-        this.setState({ showForm: false, member: {}, hasError: false })
+        this.setState({
+          team: [newMember, ...this.state.team],
+          isSuccess: true
+        })
+        console.log('Member is saved', newMember)
       })
       .catch(error => {
-        console.log(error)
+        console.log('ERROR', error)
       })
   }
 
-  handleChange = member => {
-    this.setState(() => {
-      return {
-        member: member
+  onChange = updatedValue => {
+    console.log(updatedValue)
+    this.setState({
+      member: {
+        ...this.state.member,
+        ...updatedValue
       }
     })
   }
+
   //Handle Form Errors
   handleError = () => {
-    this.setState({ hasFormError: true })
+    this.setState({ hasError: true })
   }
 
-  // Team Members (Edit, Delete) Handlers
   // Edit click handler
-  handleMemberEdit = i => {
-    const member = this.state.team[i]
-    this.setState({
-      member: member,
-      showForm: true
-    })
+  onEdit = index => {
+    const member = this.state.team[index]
+    console.log(member)
+    this.setState({ member: member || {} })
+    this.showForm()
   }
-  // Delete Click Handler
-  handleDelete = (id, index) => {
+
+  // Delete Member
+  onDelete = id => {
     const url = `${this.props.url}/${id}`
     const team = this.state.team
-    team.splice(index, 1)
-    this.setState({ team: team })
-    endpointReuqest('DELETE', url, {})
+    //Find member if get match
+    const member = team.find(member => {
+      return member.id === id
+    })
+
+    //Remove is from the team
+    team.splice(member, 1)
+
+    deleteRequest(url)
+      .then(response => {
+        this.setState({
+          team: team.filter(member => member.id !== id)
+        })
+      })
+      .catch(error => console.log('ERROR', error))
   }
 
   // Loads team members from API
   componentDidMount() {
     fetchTeam(this.props.url).then(response => {
       this.setState({ team: response })
-      console.log(response)
+      ///console.log(response)
     })
   }
 
   render() {
-    const { member } = this.state
     return (
       <Wrapper>
-        <h1>Tictail Team Manager</h1>
         <AddButton onClick={this.handleAdd}>Add Member</AddButton>
         {this.state.showForm ? (
-          <Form
-            member={member}
-            handleCancel={this.handleCancel}
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-            handleError={this.handleError}
-          />
+          <div>
+            <Form
+              member={this.state.member}
+              handleCancel={this.handleCancel}
+              onSubmit={fields => this.onSubmit(fields)}
+              onChange={fields => this.onChange(fields)}
+              handleError={this.handleError}
+              onSuccess={this.state.isSuccess}
+              hasFormError={this.state.hasError}
+            />
+            {/* <p>{JSON.stringify(this.state.member, null, 2)}</p> */}
+          </div>
         ) : null}
         <TeamMemberList
           team={this.state.team}
-          handleEdit={this.handleMemberEdit}
-          handleDelete={this.handleDeleteMember}
+          onEdit={this.onEdit}
+          onDelete={(id, index) => this.onDelete(id, index)}
         />
       </Wrapper>
     )

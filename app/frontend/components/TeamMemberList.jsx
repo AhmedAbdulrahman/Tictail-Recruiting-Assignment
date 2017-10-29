@@ -28,19 +28,69 @@ const Th = styled.th`
   text-transform: uppercase;
   white-space: nowrap;
 `
-
+const Tr = styled.tr`
+  td {
+    padding: 15px;
+    text-align: center;
+  }
+  td:first-child {
+    border-radius: 2px 0 0 2px;
+  }
+  td:last-child {
+    border-radius: 0 2px 2px 0;
+    overflow: visible;
+    white-space: normal;
+  }
+`
+const Td = styled.td`
+  text-align: center;
+  border: 1px solid #dddddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+const ButtonEdit = styled.button`
+  width: 40%;
+  background-color: #ffe57c;
+  font-size: 14px;
+  color: #3d4041;
+  border: 0;
+  border-radius: 2px;
+  outline: none;
+  padding: 10px;
+  margin-right: 10px;
+  transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    background-color: #ffdb49;
+    border-color: #cccccc;
+    color: #000000;
+  }
+`
 class TeamMemberList extends Component {
-  handleEdit = member => idx => {
-    this.props.handleEdit(idx)
-    console.log(`${member} is now editing...`)
+  editMember = index => {
+    console.log(index)
+    this.props.onEdit(index)
     return
   }
-  handleDelete = (id, idx) => {
-    this.props.handleDelete(id, idx)
+  deleteMember = id => {
+    this.props.onDelete(id)
     return
   }
 
   render() {
+    const rows = this.props.team.map(function(member, index) {
+      return (
+        <TeamMember
+          id={member.id}
+          key={member.id}
+          onEdit={index => this.editMember(index)}
+          onDelete={id => this.deleteMember(member.id)}
+          index={index}
+          member={member}
+        />
+      )
+    }, this)
     return (
       <Table>
         <thead>
@@ -52,11 +102,7 @@ class TeamMemberList extends Component {
             <Th>Action</Th>
           </tr>
         </thead>
-        <Tbody>
-          {this.props.team.map(function(member) {
-            return <TeamMember key={member.id} {...member} />
-          })}
-        </Tbody>
+        <Tbody>{rows}</Tbody>
       </Table>
     )
   }
