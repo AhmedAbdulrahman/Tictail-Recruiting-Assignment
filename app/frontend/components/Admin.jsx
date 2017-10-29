@@ -46,7 +46,8 @@ class Admin extends Component {
     },
     showForm: false,
     hasError: false,
-    isSuccess: false
+    isSuccess: false,
+    isUpdated: false
   }
 
   // Form Handlers
@@ -79,15 +80,32 @@ class Admin extends Component {
   showForm = () => {
     this.setState({ showForm: true, hasError: false })
   }
-  // Adding New Member handler
+
+  // Add New Member or Update existing one
   onSubmit = fields => {
-    endpointReuqest(this.props.url, fields)
-      .then(newMember => {
-        this.setState({
-          team: [newMember, ...this.state.team],
-          isSuccess: true
-        })
-        console.log('Member is saved', newMember)
+    // Get props
+    const { url } = this.props
+    //Get member if alreay exists?
+    const isMember = !this.state.member.id
+    //get the URL
+    const strURL = `${url}${isMember ? '' : `/${this.state.member.id}`}`
+    //Set request type
+    const strType = isMember ? 'POST' : 'PUT'
+
+    // We are readyyy!
+    endpointReuqest(strType, strURL, fields)
+      .then(response => {
+        if (isMember) {
+          this.setState({
+            team: [response.data, ...this.state.team],
+            isSuccess: true,
+            showForm: false
+          })
+        } else {
+          this.setState({
+            isUpdated: true
+          })
+        }
       })
       .catch(error => {
         console.log('ERROR', error)
@@ -95,7 +113,6 @@ class Admin extends Component {
   }
 
   onChange = updatedValue => {
-    console.log(updatedValue)
     this.setState({
       member: {
         ...this.state.member,
@@ -112,7 +129,6 @@ class Admin extends Component {
   // Edit click handler
   onEdit = index => {
     const member = this.state.team[index]
-    console.log(member)
     this.setState({ member: member || {} })
     this.showForm()
   }
@@ -142,7 +158,6 @@ class Admin extends Component {
   componentDidMount() {
     fetchTeam(this.props.url).then(response => {
       this.setState({ team: response })
-      ///console.log(response)
     })
   }
 
@@ -158,7 +173,8 @@ class Admin extends Component {
               onSubmit={fields => this.onSubmit(fields)}
               onChange={fields => this.onChange(fields)}
               handleError={this.handleError}
-              onSuccess={this.state.isSuccess}
+              isSuccess={this.state.isSuccess}
+              isUpdated={this.state.isUpdated}
               hasFormError={this.state.hasError}
             />
             {/* <p>{JSON.stringify(this.state.member, null, 2)}</p> */}

@@ -69,7 +69,6 @@ const ButtonEdit = styled.button`
 `
 class TeamMemberList extends Component {
   editMember = index => {
-    console.log(index)
     this.props.onEdit(index)
     return
   }

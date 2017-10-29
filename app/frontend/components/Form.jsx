@@ -97,47 +97,30 @@ const CancelButton = styled.button`
   }
 `
 class Form extends Component {
-  // state = {
-  //   first_name: '',
-  //   last_name: '',
-  //   title: '',
-  //   team: '',
-  //   color: '',
-  //   image: '',
-  //   location: ''
-  // }
-
   //Input Change handler
   change = e => {
     const member = this.props.member
-    member[e.target.name] = e.target.value.trim()
-    this.props.onChange(member)
-    // this.props.onChange({ [e.target.name]: e.target.value.trim() })
-    // this.setState({
-    //   [e.target.name]: e.target.value.trim()
-    // })
-
+    this.props.onChange({ [e.target.name]: e.target.value })
     return
   }
   //Form Submit Handler
   onSubmit = e => {
     e.preventDefault()
-    const { state } = this
+    const { member } = this.props
     if (
-      !state.first_name ||
-      !state.last_name ||
-      !state.team ||
-      !state.title ||
-      !state.color ||
-      !state.image ||
-      !state.location
+      !member.first_name ||
+      !member.last_name ||
+      !member.team ||
+      !member.title ||
+      !member.color ||
+      !member.image ||
+      !member.location
     ) {
       this.props.handleError()
       return
     }
-    this.props.onSubmit(this.state)
-    //Clear Input Fields
-    this.refs.MemberForm.reset()
+    //Pass member input values for adding
+    this.props.onSubmit(member)
   }
   // Form Cancel Handler
   handleCancel = e => {
@@ -149,7 +132,9 @@ class Form extends Component {
     const { member } = this.props
     return (
       <Container>
-        <MemberForm ref="memberForm">
+        <MemberForm>
+          {this.props.isSuccess ? <Error className="error">Member added successfully.</Error> : null}
+          {this.props.isUpdated ? <Error className="error">Member updated successfully.</Error> : null}
           <FormGroup>
             <Label htmlFor="first_name">First Name</Label>
             <Input name="first_name" type="text" value={member.first_name} onChange={e => this.change(e)} autoFocus />
@@ -186,7 +171,6 @@ class Form extends Component {
             {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
           </FormGroup>
           <FormGroup>
-            {/* <Input type="text" ref="id" hidden value={this.id} onChange={e => this.change(e)} /> */}
             <ButtonWrapper>
               <SubmitButton type="submit" value="Submit" onClick={e => this.onSubmit(e)} />
               <CancelButton onClick={this.handleCancel}>Cancel</CancelButton>

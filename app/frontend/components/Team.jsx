@@ -70,11 +70,8 @@ class Team extends Component {
       .get(this.props.url)
       .then(response => {
         this.setState({ team: response.data })
-        console.log(response.status)
       })
-      .catch(function(error) {
-        console.log(error)
-      })
+      .catch(error => error)
   }
 
   render() {

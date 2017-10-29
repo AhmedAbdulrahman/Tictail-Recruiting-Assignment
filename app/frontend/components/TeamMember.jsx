@@ -45,16 +45,15 @@ const ButtonEdit = styled.button`
 class TeamMember extends Component {
   editMember = () => {
     this.props.onEdit(this.props.index)
-    console.log(this.props.index)
     return
   }
   deleteMember = () => {
-    this.props.handleDelete(this.props.id)
+    this.props.onDelete(this.props.id)
     return
   }
   render() {
     return (
-      <Tr id={this.props.id}>
+      <Tr key={this.props.id}>
         <td>{this.props.member.first_name || 'N/A'}</td>
         <td>{this.props.member.last_name || 'N/A'}</td>
         <td colSpan="2">{this.props.member.title || 'N/A'}</td>

@@ -28627,9 +28627,8 @@ var Team = function (_Component) {
 
     __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.props.url).then(function (response) {
       _this2.setState({ team: response.data });
-      console.log(response.status);
     }).catch(function (error) {
-      console.log(error);
+      return error;
     });
   };
 
@@ -31423,7 +31422,8 @@ var Admin = function (_Component) {
       },
       showForm: false,
       hasError: false,
-      isSuccess: false
+      isSuccess: false,
+      isUpdated: false
 
       // Form Handlers
       // Add Button
@@ -31451,17 +31451,33 @@ var Admin = function (_Component) {
     }, _this.showForm = function () {
       _this.setState({ showForm: true, hasError: false });
     }, _this.onSubmit = function (fields) {
-      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["b" /* endpointReuqest */])(_this.props.url, fields).then(function (newMember) {
-        _this.setState({
-          team: [newMember].concat(_this.state.team),
-          isSuccess: true
-        });
-        console.log('Member is saved', newMember);
+      // Get props
+      var url = _this.props.url;
+      //Get member if alreay exists?
+
+      var isMember = !_this.state.member.id;
+      //get the URL
+      var strURL = '' + url + (isMember ? '' : '/' + _this.state.member.id);
+      //Set request type
+      var strType = isMember ? 'POST' : 'PUT';
+
+      // We are readyyy!
+      Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["b" /* endpointReuqest */])(strType, strURL, fields).then(function (response) {
+        if (isMember) {
+          _this.setState({
+            team: [response.data].concat(_this.state.team),
+            isSuccess: true,
+            showForm: false
+          });
+        } else {
+          _this.setState({
+            isUpdated: true
+          });
+        }
       }).catch(function (error) {
         console.log('ERROR', error);
       });
     }, _this.onChange = function (updatedValue) {
-      console.log(updatedValue);
       _this.setState({
         member: _extends({}, _this.state.member, updatedValue)
       });
@@ -31469,7 +31485,6 @@ var Admin = function (_Component) {
       _this.setState({ hasError: true });
     }, _this.onEdit = function (index) {
       var member = _this.state.team[index];
-      console.log(member);
       _this.setState({ member: member || {} });
       _this.showForm();
     }, _this.onDelete = function (id) {
@@ -31496,7 +31511,8 @@ var Admin = function (_Component) {
   }
   // Cancel Button
 
-  // Adding New Member handler
+
+  // Add New Member or Update existing one
 
 
   //Handle Form Errors
@@ -31514,7 +31530,6 @@ var Admin = function (_Component) {
 
     Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["c" /* fetchTeam */])(this.props.url).then(function (response) {
       _this2.setState({ team: response });
-      ///console.log(response)
     });
   };
 
@@ -31542,7 +31557,8 @@ var Admin = function (_Component) {
             return _this3.onChange(fields);
           },
           handleError: this.handleError,
-          onSuccess: this.state.isSuccess,
+          isSuccess: this.state.isSuccess,
+          isUpdated: this.state.isUpdated,
           hasFormError: this.state.hasError
         })
       ) : null,
@@ -31579,9 +31595,13 @@ const fetchTeam = url => {
 /* harmony export (immutable) */ __webpack_exports__["c"] = fetchTeam;
 
 
-const endpointReuqest = (url, data) => {
-  return __WEBPACK_IMPORTED_MODULE_0_axios___default.a
-    .post(url, data)
+const endpointReuqest = (reqType, apiObjUrl, objData) => {
+  const config = {
+    method: reqType,
+    url: apiObjUrl,
+    data: objData
+  }
+  return __WEBPACK_IMPORTED_MODULE_0_axios___default()(config)
     .then(response => response)
     .catch(error => error)
 }
@@ -31648,7 +31668,6 @@ var TeamMemberList = function (_Component) {
     }
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.editMember = function (index) {
-      console.log(index);
       _this.props.onEdit(index);
       return;
     }, _this.deleteMember = function (id) {
@@ -31768,10 +31787,9 @@ var TeamMember = function (_Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.editMember = function () {
       _this.props.onEdit(_this.props.index);
-      console.log(_this.props.index);
       return;
     }, _this.deleteMember = function () {
-      _this.props.handleDelete(_this.props.id);
+      _this.props.onDelete(_this.props.id);
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -31779,7 +31797,7 @@ var TeamMember = function (_Component) {
   TeamMember.prototype.render = function render() {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       Tr,
-      { id: this.props.id },
+      { key: this.props.id },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
         null,
@@ -31878,43 +31896,27 @@ var Form = function (_Component) {
     }
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, _Component.call.apply(_Component, [this].concat(args))), _this), _this.change = function (e) {
-      var member = _this.props.member;
-      member[e.target.name] = e.target.value.trim();
-      _this.props.onChange(member);
-      // this.props.onChange({ [e.target.name]: e.target.value.trim() })
-      // this.setState({
-      //   [e.target.name]: e.target.value.trim()
-      // })
+      var _this$props$onChange;
 
+      var member = _this.props.member;
+      _this.props.onChange((_this$props$onChange = {}, _this$props$onChange[e.target.name] = e.target.value, _this$props$onChange));
       return;
     }, _this.onSubmit = function (e) {
       e.preventDefault();
-      var _this2 = _this,
-          state = _this2.state;
+      var member = _this.props.member;
 
-      if (!state.first_name || !state.last_name || !state.team || !state.title || !state.color || !state.image || !state.location) {
+      if (!member.first_name || !member.last_name || !member.team || !member.title || !member.color || !member.image || !member.location) {
         _this.props.handleError();
         return;
       }
-      _this.props.onSubmit(_this.state);
-      //Clear Input Fields
-      _this.refs.MemberForm.reset();
+      //Pass member input values for adding
+      _this.props.onSubmit(member);
     }, _this.handleCancel = function (e) {
       e.preventDefault();
       _this.props.handleCancel();
       return;
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
-  // state = {
-  //   first_name: '',
-  //   last_name: '',
-  //   title: '',
-  //   team: '',
-  //   color: '',
-  //   image: '',
-  //   location: ''
-  // }
-
   //Input Change handler
 
   //Form Submit Handler
@@ -31923,7 +31925,7 @@ var Form = function (_Component) {
 
 
   Form.prototype.render = function render() {
-    var _this3 = this;
+    var _this2 = this;
 
     var member = this.props.member;
 
@@ -31932,7 +31934,17 @@ var Form = function (_Component) {
       null,
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         MemberForm,
-        { ref: 'memberForm' },
+        null,
+        this.props.isSuccess ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          Error,
+          { className: 'error' },
+          'Member added successfully.'
+        ) : null,
+        this.props.isUpdated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          Error,
+          { className: 'error' },
+          'Member updated successfully.'
+        ) : null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           FormGroup,
           null,
@@ -31942,7 +31954,7 @@ var Form = function (_Component) {
             'First Name'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'first_name', type: 'text', value: member.first_name, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             }, autoFocus: true }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -31959,7 +31971,7 @@ var Form = function (_Component) {
             'Last Name'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'last_name', type: 'text', value: member.last_name, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -31976,7 +31988,7 @@ var Form = function (_Component) {
             'Title'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'title', type: 'text', value: member.title, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -31993,7 +32005,7 @@ var Form = function (_Component) {
             'Team'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'team', type: 'text', value: member.team, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -32010,7 +32022,7 @@ var Form = function (_Component) {
             'Color'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'color', type: 'text', value: member.color, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -32027,7 +32039,7 @@ var Form = function (_Component) {
             'Image'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'image', type: 'text', value: member.image, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -32044,7 +32056,7 @@ var Form = function (_Component) {
             'Location'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Input, { name: 'location', type: 'text', value: member.location, onChange: function onChange(e) {
-              return _this3.change(e);
+              return _this2.change(e);
             } }),
           this.props.hasFormError ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             Error,
@@ -32059,7 +32071,7 @@ var Form = function (_Component) {
             ButtonWrapper,
             null,
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SubmitButton, { type: 'submit', value: 'Submit', onClick: function onClick(e) {
-                return _this3.onSubmit(e);
+                return _this2.onSubmit(e);
               } }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               CancelButton,

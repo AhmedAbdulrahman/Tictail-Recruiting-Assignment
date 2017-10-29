@@ -7,9 +7,13 @@ export const fetchTeam = url => {
     .catch(error => error)
 }
 
-export const endpointReuqest = (url, data) => {
-  return axios
-    .post(url, data)
+export const endpointReuqest = (reqType, apiObjUrl, objData) => {
+  const config = {
+    method: reqType,
+    url: apiObjUrl,
+    data: objData
+  }
+  return axios(config)
     .then(response => response)
     .catch(error => error)
 }
