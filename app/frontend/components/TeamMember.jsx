@@ -3,6 +3,10 @@ import styled from 'styled-components'
 import placeholder from '../../backend/templates/img/placeholder.png'
 
 const Tr = styled.tr`
+  &:hover {
+    transform: translateY(-3px);
+    transition: transform 2s cubic-bezier(0.63, 0.01, 1, 1);
+  }
   td {
     padding: 15px;
     text-align: center;

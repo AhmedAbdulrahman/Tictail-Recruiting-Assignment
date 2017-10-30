@@ -10,10 +10,19 @@ const Wrapper = styled.div`
   min-height: 100%;
   height: 100px;
 `
+//const activeClassName = 'nav-item-active'
+const NavItem = styled(Link)`
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  flex: 0;
+`
 const Header = styled.header`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-bottom: 1px solid #fff;
-  border-color: rgba(0, 0, 0, 0.09)
+  border-color: rgba(0, 0, 0, 0.09);
   color: #000;
   width: 100%;
   height: 120px;
@@ -44,10 +53,10 @@ const SubTitle = styled.h2`
   margin-right: auto;
   margin-bottom: 3em;
   font-family: 'Open Sans', sans-serif;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 300;
   text-align: center;
-  line-height: 1.5;
+  line-height: 2;
   letter-spacing: 0.04em;
   opacity: 0.7;
   color: #6c6c6c;
@@ -94,11 +103,12 @@ class Team extends Component {
     return (
       <Wrapper>
         <Header>
-          <Link to="/admin">Tictail</Link>
+          <Link to="/">Tictail</Link>
+          <NavItem to="/admin">Admin</NavItem>
         </Header>
         <Hero>
           <Title>
-            <Highlight>Makers</Highlight> gonna make
+            Incredible <Highlight>Tictailers</Highlight> In Sthlm
           </Title>
           <SubTitle>
             At Tictail, we organize bi-annual Demo Weeks where we hack on creative projects. It’s a good way to get that

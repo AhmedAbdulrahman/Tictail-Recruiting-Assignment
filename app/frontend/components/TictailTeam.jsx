@@ -29,7 +29,7 @@ const CardMember = styled.div`
   position: relative;
   overflow: hidden;
   &:hover ${CardMedia}:after {
-    background: linear-gradient(-180deg, rgba(255, 219, 73, 0.55) 50%, #ffdb49 100%);
+    background: linear-gradient(-180deg, rgba(255, 219, 73, 0.5) 50%, #ffdb49 100%);
   }
 `
 

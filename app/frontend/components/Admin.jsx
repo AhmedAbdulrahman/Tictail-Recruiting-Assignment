@@ -18,8 +18,11 @@ const Wrapper = styled.div`
 `
 const Header = styled.header`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-bottom: 1px solid #fff;
-  border-color: rgba(0, 0, 0, 0.09)
+  border-color: rgba(0, 0, 0, 0.09);
   color: #000;
   width: 100%;
   height: 120px;
@@ -30,11 +33,11 @@ const Header = styled.header`
 `
 const AddButton = styled.button`
   width: 10%;
-  background-color: #fff;
+  background-color: #fefefe;
   border: 2px solid #dce2ec;
   border-radius: 2px;
   font-size: 14px;
-  color: #ffdb49;
+  color: #1f1e1d;
   outline: none;
   padding: 10px;
   margin-bottom: 30px;

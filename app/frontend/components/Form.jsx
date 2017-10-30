@@ -46,13 +46,15 @@ const FormGroup = styled.div`
 `
 const Label = styled.label`
   display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
   max-width: 100%;
   margin-bottom: 5px;
-  font-weight: 700;
 `
 const Error = styled.p`
   color: #f81763;
-  font-size: 14px;
+  font-size: 13px;
   margin-top: 0;
 `
 const ButtonWrapper = styled.div`
