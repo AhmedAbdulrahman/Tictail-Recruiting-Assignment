@@ -1,113 +1,17 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
 import moment from 'moment-timezone'
+import {
+  Container,
+  MemberForm,
+  FormGroup,
+  Error,
+  Label,
+  Input,
+  ButtonWrapper,
+  SubmitButton,
+  CancelButton
+} from '../styles/AppStyle'
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  & * {
-    box-sizing: border-box;
-  }
-`
-const MemberForm = styled.form`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between;
-  margin: 0 auto;
-  margin-bottom: 0;
-  padding: 10px 0;
-`
-const Input = styled.input.attrs({
-  type: 'text'
-})`
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-width: 2px;
-  outline: 0;
-  width: 100%;
-  min-height: 40px;
-  height: auto;
-  padding: 0 20px;
-  margin: 0 10px 13px 0;
-  font-size: 12px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  &:focus {
-    border: 1px solid rgba(255, 229, 124, 0.79);
-    border-width: 2px;
-    box-shadow: inset 0 1px 1px rgba(255, 229, 124, 0.79);
-  }
-`
-const FormGroup = styled.div`
-  margin-bottom: 0;
-  margin-right: 10px;
-  padding: 10px 0;
-  width: 100%;
-  @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 20%;
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    width: 28%;
-  }
-  @media (min-width: 320px) and (max-width: 480px) {
-    width: 100%;
-  }
-`
-const Label = styled.label`
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  max-width: 100%;
-  margin-bottom: 5px;
-`
-const Error = styled.p`
-  color: #f81763;
-  font-size: 13px;
-  margin-top: 0;
-`
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between;
-`
-const SubmitButton = styled.input.attrs({
-  type: 'submit'
-})`
-  width: 45%;
-  background-color: #ffeea8;
-  border: 2px solid #ffdb49;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
-  outline: none;
-  padding: 10px;
-  transition: all 0.1s;
-  cursor: pointer;
-  &:hover {
-    border-color: #ddc76b;
-    color: #000000;
-  }
-`
-const CancelButton = styled.button`
-  width: 45%;
-  background-color: #ffdb49;
-  border: 2px solid #f4d34d;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
-  outline: none;
-  padding: 10px;
-  transition: all 0.1s;
-  cursor: pointer;
-  &:hover {
-    border-color: #ddc76b;
-    color: #000000;
-  }
-`
 class Form extends Component {
   state = {
     firstNameError: '',

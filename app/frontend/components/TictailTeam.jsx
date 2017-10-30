@@ -1,115 +1,20 @@
 import React from 'react'
-import styled from 'styled-components'
+import {
+  ListItem,
+  CardMember,
+  CardMedia,
+  CardImageNormal,
+  CardImageHover,
+  CardImage,
+  CardCaption,
+  CardText,
+  CardTitle,
+  CardSubtitle
+} from '../styles/AppStyle'
+
+//Image Placeholder
 import placeholder from '../../backend/templates/img/placeholder.png'
 
-// Team Page Style
-const ListItem = styled.li`
-  background-color: #fff;
-  box-sizing: border-box;
-  margin: 10px;
-  flex-shrink: 0;
-  flex-basis: ${props => props.widht}%;
-  box-shadow: 7px 10px 15px 1px rgba(0, 0, 0, 0.09);
-  width: 17%;
-
-  @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 20%;
-  }
-
-  @media (min-width: 768px) and (max-width: 1024px) {
-    width: 45%;
-  }
-
-  @media (min-width: 320px) and (max-width: 480px) {
-    width: 100%;
-  }
-`
-const CardMember = styled.div`
-  position: relative;
-  overflow: hidden;
-  &:hover ${CardMedia}:after {
-    background: linear-gradient(-180deg, rgba(255, 219, 73, 0.5) 50%, #ffdb49 100%);
-  }
-`
-
-const CardMedia = styled.div`
-  &:after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(-180deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.55) 75%, #fff 100%);
-    transition: all 5s;
-  }
-`
-const CardImageNormal = styled.div`opacity: 1;`
-
-const CardImageHover = styled.div`
-  transition: all 14s;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  ${CardMember}:hover & {
-    opacity: 1;
-  }
-`
-const CardImage = styled.img`
-  width: 100%;
-  max-width: 100%;
-  ${CardMember}:hover & {
-    filter: grayscale(100%);
-  }
-`
-const CardCaption = styled.div`
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 3em;
-  color: #fff;
-  padding: 10px 14px;
-  transition: transform 0.4s;
-  transform: translateY(100%);
-  ${CardMember}:hover & {
-    transform: translateY(-90%);
-  }
-`
-const CardText = styled.div`flex-grow: 1;`
-const CardTitle = styled.h2`
-  font-size: 20px;
-  line-height: 1.2;
-  color: #584f36;
-  margin: 0;
-  padding: 0;
-  transition: transform 0.35s, -webkit-transform 0.35s;
-  transform: translateY(200%);
-  ${CardMember}:hover & {
-    transition-delay: 0.05s;
-    transform: translateY(-30%);
-  }
-`
-const CardSubtitle = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  color: #967b10;
-  margin-top: 10px;
-  transition-delay: 0.2s;
-  transition: transform 0.35s, -webkit-transform 0.35s;
-  transform: translateY(200%);
-  opacity: 0.8;
-  ${CardMember}:hover & {
-    transition-delay: 0.1s;
-    text-indent: 0.08em;
-    transform: translateY(-30%);
-  }
-`
 const TictailTeam = props => (
   <ListItem>
     <CardMember>
