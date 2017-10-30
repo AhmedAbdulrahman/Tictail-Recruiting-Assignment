@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 import TictailTeam from './TictailTeam'
 import Spinner from './Spinner'
@@ -10,7 +10,19 @@ const Wrapper = styled.div`
   min-height: 100%;
   height: 100px;
 `
-//const activeClassName = 'nav-item-active'
+const BounceIn = keyframes`
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+`
 const NavItem = styled(Link)`
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
@@ -46,6 +58,7 @@ const Title = styled.h1`
   text-transform: uppercase;
   color: #1f1e1d;
   margin-bottom: 60px;
+  animation: ${BounceIn} 2s ease-in-out;
 `
 const SubTitle = styled.h2`
   max-width: 1300px;

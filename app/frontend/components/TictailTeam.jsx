@@ -1,5 +1,4 @@
 import React from 'react'
-import { StaggeredMotion, spring } from 'react-motion'
 import styled from 'styled-components'
 import placeholder from '../../backend/templates/img/placeholder.png'
 
@@ -112,48 +111,26 @@ const CardSubtitle = styled.h3`
   }
 `
 const TictailTeam = props => (
-  <StaggeredMotion
-    defaultStyles={[{ width: 20 }, { width: 100 }, { width: 100 }, { width: 100 }]}
-    styles={prevStyles => [
-      { width: spring(0) },
-      { width: spring(prevStyles[0].width) },
-      { width: spring(prevStyles[1].width) },
-      { width: spring(prevStyles[2].width) }
-    ]}
-  >
-    {styles => (
-      <ListItem width={styles[0].width}>
-        <CardMember>
-          <CardMedia>
-            <CardImageNormal>
-              <CardImage
-                src={props.image || placeholder}
-                widht="320"
-                height="320"
-                alt={`Image for ${props.first_name}`}
-              />
-            </CardImageNormal>
-            <CardImageHover>
-              <CardImage
-                src={props.image || placeholder}
-                widht="320"
-                height="320"
-                alt={`Image for ${props.first_name}`}
-              />
-            </CardImageHover>
-          </CardMedia>
-          <CardCaption>
-            <CardText>
-              <CardTitle>
-                {(props.first_name && props.last_name) === null ? 'No Name' : props.first_name + ' ' + props.last_name}
-              </CardTitle>
-              <CardSubtitle>{`${props.title || 'Ticktailer'}, ${props.location}`}</CardSubtitle>
-            </CardText>
-          </CardCaption>
-        </CardMember>
-      </ListItem>
-    )}
-  </StaggeredMotion>
+  <ListItem>
+    <CardMember>
+      <CardMedia>
+        <CardImageNormal>
+          <CardImage src={props.image || placeholder} widht="320" height="320" alt={`Image for ${props.first_name}`} />
+        </CardImageNormal>
+        <CardImageHover>
+          <CardImage src={props.image || placeholder} widht="320" height="320" alt={`Image for ${props.first_name}`} />
+        </CardImageHover>
+      </CardMedia>
+      <CardCaption>
+        <CardText>
+          <CardTitle>
+            {(props.first_name && props.last_name) === null ? 'No Name' : props.first_name + ' ' + props.last_name}
+          </CardTitle>
+          <CardSubtitle>{`${props.title || 'Ticktailer'}, ${props.location}`}</CardSubtitle>
+        </CardText>
+      </CardCaption>
+    </CardMember>
+  </ListItem>
 )
 
 export default TictailTeam

@@ -12,8 +12,9 @@ import Form from './Form'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  width: 1200px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin: 0 auto;
 `
 const Header = styled.header`

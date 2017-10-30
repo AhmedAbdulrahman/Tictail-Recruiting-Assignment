@@ -6,6 +6,9 @@ const Table = styled.table`
   border-spacing: 0 10px;
   table-layout: fixed;
   width: 100%;
+  @media (min-width: 1200px) and (max-width: 1600px) {
+    width: 80%;
+  }
 `
 const Thead = styled.thead`
   border: 0;

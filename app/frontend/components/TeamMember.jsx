@@ -5,7 +5,7 @@ import placeholder from '../../backend/templates/img/placeholder.png'
 const Tr = styled.tr`
   &:hover {
     transform: translateY(-3px);
-    transition: transform 2s cubic-bezier(0.63, 0.01, 1, 1);
+    transition: transform 2s east-in-out;
   }
   td {
     padding: 15px;
@@ -29,7 +29,6 @@ const Td = styled.td`
 `
 
 const ButtonEdit = styled.button`
-  width: 40%;
   background-color: #ffe57c;
   font-size: 14px;
   color: #3d4041;
