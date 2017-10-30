@@ -4,10 +4,50 @@ import TeamMember from './TeamMember'
 
 const Table = styled.table`
   border-spacing: 0 10px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   table-layout: fixed;
   width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  & tr {
+    padding: 0.35em;
+  }
   @media (min-width: 1200px) and (max-width: 1600px) {
     width: 80%;
+  }
+  @media (max-width: 600px) {
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: 0.625em;
+    }
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: 0.8em;
+      text-align: right;
+    }
+    table td:before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    table td:last-child {
+      border-bottom: 0;
+    }
   }
 `
 const Thead = styled.thead`
@@ -18,7 +58,8 @@ const Thead = styled.thead`
 const Tbody = styled.tbody`
 	& tr {
 		background-color: #fff;
-		box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
+    box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
+    box-sizing: box-content;
 `
 const Th = styled.th`
   padding: 10px;
@@ -30,20 +71,6 @@ const Th = styled.th`
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
-`
-const Tr = styled.tr`
-  td {
-    padding: 15px;
-    text-align: center;
-  }
-  td:first-child {
-    border-radius: 2px 0 0 2px;
-  }
-  td:last-child {
-    border-radius: 0 2px 2px 0;
-    overflow: visible;
-    white-space: normal;
-  }
 `
 const Td = styled.td`
   text-align: center;

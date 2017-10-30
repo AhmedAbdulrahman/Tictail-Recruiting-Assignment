@@ -16,7 +16,7 @@ const BounceIn = keyframes`
     opacity: 0;
   }
   60% {
-    transform: scale(1.2);
+    transform: scale(1.1);
     opacity: 1;
   }
   100% {
@@ -59,6 +59,7 @@ const Title = styled.h1`
   color: #1f1e1d;
   margin-bottom: 60px;
   animation: ${BounceIn} 2s ease-in-out;
+  box-sizing: border-box;
 `
 const SubTitle = styled.h2`
   max-width: 1300px;

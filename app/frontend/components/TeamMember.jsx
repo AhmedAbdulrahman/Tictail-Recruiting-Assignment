@@ -8,6 +8,8 @@ const Tr = styled.tr`
     transition: transform 2s east-in-out;
   }
   td {
+    padding: 8px;
+    line-height: 1.5;
     padding: 15px;
     text-align: center;
   }
@@ -35,14 +37,26 @@ const ButtonEdit = styled.button`
   border: 0;
   border-radius: 2px;
   outline: none;
+  width: 27%;
+  margin: 0 5px 5px;
   padding: 10px;
-  margin-right: 10px;
+  box-sizing: content-box;
+  overflow: hidden;
   transition: all 0.1s;
   cursor: pointer;
   &:hover {
     background-color: #ffdb49;
     border-color: #cccccc;
     color: #000000;
+  }
+  @media (min-width: 1200px) and (max-width: 1600px) {
+    width: 27%;
+  }
+  @media (min-width: 600px) and (max-width: 800px) {
+    width: 44%;
+  }
+  @media (min-width: 320px) and (max-width: 480px) {
+    width: 100%;
   }
 `
 class TeamMember extends Component {

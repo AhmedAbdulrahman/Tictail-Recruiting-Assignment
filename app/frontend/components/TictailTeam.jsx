@@ -78,7 +78,7 @@ const CardCaption = styled.div`
   transition: transform 0.4s;
   transform: translateY(100%);
   ${CardMember}:hover & {
-    transform: translateY(-30%);
+    transform: translateY(-90%);
   }
 `
 const CardText = styled.div`flex-grow: 1;`
@@ -98,8 +98,8 @@ const CardTitle = styled.h2`
 const CardSubtitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
-  line-height: 1.2;
   color: #967b10;
+  margin-top: 10px;
   transition-delay: 0.2s;
   transition: transform 0.35s, -webkit-transform 0.35s;
   transform: translateY(200%);

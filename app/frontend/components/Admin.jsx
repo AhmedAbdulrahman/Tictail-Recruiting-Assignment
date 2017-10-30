@@ -33,7 +33,6 @@ const Header = styled.header`
   z-index: 1;
 `
 const AddButton = styled.button`
-  width: 10%;
   background-color: #fefefe;
   border: 2px solid #dce2ec;
   border-radius: 2px;

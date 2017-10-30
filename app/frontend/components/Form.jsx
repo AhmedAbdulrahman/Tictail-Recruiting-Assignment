@@ -42,7 +42,16 @@ const FormGroup = styled.div`
   margin-bottom: 0;
   margin-right: 10px;
   padding: 10px 0;
-  width: 20%;
+  width: 100%;
+  @media (min-width: 1200px) and (max-width: 1600px) {
+    width: 20%;
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    width: 28%;
+  }
+  @media (min-width: 320px) and (max-width: 480px) {
+    width: 100%;
+  }
 `
 const Label = styled.label`
   display: inline-block;
