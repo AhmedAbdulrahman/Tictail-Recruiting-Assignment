@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import styled from 'styled-components'
 
@@ -9,33 +10,47 @@ const Wrapper = styled.div`
   min-height: 100%;
   height: 100px;
 `
+const Header = styled.header`
+  position: relative;
+  border-bottom: 1px solid #fff;
+  border-color: rgba(0, 0, 0, 0.09)
+  color: #000;
+  width: 100%;
+  height: 120px;
+  box-sizing: border-box;
+  padding: 0 70px;
+  margin-bottom: 2em;
+  z-index: 1;
+`
 const Hero = styled.div`
-  background: #ffdb49;
   position: relative;
   padding-top: 10px;
   padding-bottom: 50px;
 `
 const Title = styled.h1`
+  font-family: 'Anton', sans-serif;
   font-size: 100px;
   font-weight: 700;
   font-style: normal;
   line-height: 1.1;
   text-align: center;
   text-transform: uppercase;
-  color: #fff;
+  color: #1f1e1d;
   margin-bottom: 60px;
-  padding-top: 30px;
 `
 const SubTitle = styled.h2`
-  max-width: 1000px;
+  max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 3em;
+  font-family: 'Open Sans', sans-serif;
   font-size: 23px;
   font-weight: 300;
   text-align: center;
   line-height: 1.5;
   letter-spacing: 0.04em;
   opacity: 0.7;
+  color: #6c6c6c;
 `
 const Highlight = styled.span`
   display: inline-block;
@@ -47,18 +62,19 @@ const Highlight = styled.span`
     width: 100%;
     height: 13px;
     text-align: center;
-    background-color: #fff;
+    background-color: #ffdb49;
     transition: all 0.2s ease-in-out;
   }
 `
 const ListTeam = styled.ul`
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
-  flex: initial;
+  width: 100%;
   position: relative;
   list-style: none;
   margin: 0;
+  padding: 0;
 `
 class Team extends Component {
   state = {
@@ -77,6 +93,9 @@ class Team extends Component {
   render() {
     return (
       <Wrapper>
+        <Header>
+          <Link to="/admin">Tictail</Link>
+        </Header>
         <Hero>
           <Title>
             <Highlight>Makers</Highlight> gonna make
@@ -89,7 +108,7 @@ class Team extends Component {
           </SubTitle>
         </Hero>
         <ListTeam>
-          {!this.state.team ? <Spinner /> : this.state.team.map(member => <TictailTeam key={member.id} {...member} />)}
+          {!this.state.team ? 'Loading...' : this.state.team.map(member => <TictailTeam key={member.id} {...member} />)}
         </ListTeam>
       </Wrapper>
     )

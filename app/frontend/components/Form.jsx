@@ -97,30 +97,68 @@ const CancelButton = styled.button`
   }
 `
 class Form extends Component {
+  state = {
+    firstNameError: '',
+    lastNameError: '',
+    titleError: '',
+    teamError: '',
+    colorError: '',
+    imageError: '',
+    locationError: ''
+  }
   //Input Change handler
   change = e => {
     const member = this.props.member
     this.props.onChange({ [e.target.name]: e.target.value })
     return
   }
+
+  //Validation
+  validate = () => {
+    const { member } = this.props
+    const errors = {
+      firstNameError: '',
+      lastNameError: '',
+      titleError: '',
+      teamError: '',
+      colorError: '',
+      imageError: '',
+      locationError: ''
+    }
+    let isError = false
+
+    if (member.first_name.length < 5) {
+      isError = true
+      errors.firstNameError = 'Name needs to be at least 5 characters long!'
+    }
+    if (/^[0-9A-F]{6}$/i.test(member.color) == false) {
+      isError = true
+      errors.colorError = 'Color code format #c1c1c1!'
+    }
+    // Clear error message
+    this.setState({
+      ...errors
+    })
+
+    return isError
+  }
   //Form Submit Handler
   onSubmit = e => {
     e.preventDefault()
     const { member } = this.props
-    if (
-      !member.first_name ||
-      !member.last_name ||
-      !member.team ||
-      !member.title ||
-      !member.color ||
-      !member.image ||
-      !member.location
-    ) {
-      this.props.handleError()
-      return
+    const err = this.validate()
+    if (!err) {
+      this.setState({
+        firstNameError: '',
+        lastNameError: '',
+        titleError: '',
+        teamError: '',
+        colorError: '',
+        imageError: '',
+        locationError: ''
+      })
+      this.props.onSubmit(member)
     }
-    //Pass member input values for adding
-    this.props.onSubmit(member)
   }
   // Form Cancel Handler
   handleCancel = e => {
@@ -138,37 +176,37 @@ class Form extends Component {
           <FormGroup>
             <Label htmlFor="first_name">First Name</Label>
             <Input name="first_name" type="text" value={member.first_name} onChange={e => this.change(e)} autoFocus />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.firstNameError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="last_name">Last Name</Label>
             <Input name="last_name" type="text" value={member.last_name} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.lastNameError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="title">Title</Label>
             <Input name="title" type="text" value={member.title} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.titleError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="team">Team</Label>
             <Input name="team" type="text" value={member.team} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.teamError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="color">Color</Label>
             <Input name="color" type="text" value={member.color} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.colorError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="image">Image</Label>
             <Input name="image" type="text" value={member.image} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.imageError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="Location">Location</Label>
             <Input name="location" type="text" value={member.location} onChange={e => this.change(e)} />
-            {this.props.hasFormError ? <Error className="error">Field is required.</Error> : null}
+            <Error className="error">{this.state.locationError}</Error>
           </FormGroup>
           <FormGroup>
             <ButtonWrapper>

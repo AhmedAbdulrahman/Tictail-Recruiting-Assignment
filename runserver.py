@@ -20,9 +20,9 @@ api = Api(app)
 contacts = json.loads(open('contacts.json').read())
 
 
-# @app.route('/')
-# def redirection():
-#     return redirect(url_for("application"), 302)
+@app.route('/')
+def redirection():
+    return redirect(url_for("application"), 302)
 
 
 @app.route('/admin')

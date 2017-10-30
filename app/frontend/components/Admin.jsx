@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 // API
@@ -14,6 +15,18 @@ const Wrapper = styled.div`
   align-items: flex-end;
   width: 1200px;
   margin: 0 auto;
+`
+const Header = styled.header`
+  position: relative;
+  border-bottom: 1px solid #fff;
+  border-color: rgba(0, 0, 0, 0.09)
+  color: #000;
+  width: 100%;
+  height: 120px;
+  box-sizing: border-box;
+  padding: 0 70px;
+  margin-bottom: 2em;
+  z-index: 1;
 `
 const AddButton = styled.button`
   width: 10%;
@@ -83,6 +96,7 @@ class Admin extends Component {
 
   // Add New Member or Update existing one
   onSubmit = fields => {
+    return
     // Get props
     const { url } = this.props
     //Get member if alreay exists?
@@ -164,21 +178,21 @@ class Admin extends Component {
   render() {
     return (
       <Wrapper>
+        <Header>
+          <Link to="/team">Tictail</Link>
+        </Header>
         <AddButton onClick={this.handleAdd}>Add Member</AddButton>
         {this.state.showForm ? (
-          <div>
-            <Form
-              member={this.state.member}
-              handleCancel={this.handleCancel}
-              onSubmit={fields => this.onSubmit(fields)}
-              onChange={fields => this.onChange(fields)}
-              handleError={this.handleError}
-              isSuccess={this.state.isSuccess}
-              isUpdated={this.state.isUpdated}
-              hasFormError={this.state.hasError}
-            />
-            {/* <p>{JSON.stringify(this.state.member, null, 2)}</p> */}
-          </div>
+          <Form
+            member={this.state.member}
+            handleCancel={this.handleCancel}
+            onSubmit={fields => this.onSubmit(fields)}
+            onChange={fields => this.onChange(fields)}
+            handleError={this.handleError}
+            isSuccess={this.state.isSuccess}
+            isUpdated={this.state.isUpdated}
+            hasFormError={this.state.hasError}
+          />
         ) : null}
         <TeamMemberList
           team={this.state.team}

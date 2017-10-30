@@ -1,11 +1,29 @@
 import React from 'react'
+import { StaggeredMotion, spring } from 'react-motion'
 import styled from 'styled-components'
 import placeholder from '../../backend/templates/img/placeholder.png'
+
+// Team Page Style
 const ListItem = styled.li`
   background-color: #fff;
   box-sizing: border-box;
+  margin: 10px;
   flex-shrink: 0;
-  width: 20%;
+  flex-basis: ${props => props.widht}%;
+  box-shadow: 7px 10px 15px 1px rgba(0, 0, 0, 0.09);
+  width: 17%;
+
+  @media (min-width: 1200px) and (max-width: 1600px) {
+    width: 20%;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    width: 45%;
+  }
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    width: 100%;
+  }
 `
 const CardMember = styled.div`
   position: relative;
@@ -25,13 +43,13 @@ const CardMedia = styled.div`
     right: 0;
     bottom: 0;
     background: linear-gradient(-180deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.55) 75%, #fff 100%);
-    transition: opacity 2s, background 2s;
+    transition: all 5s;
   }
 `
 const CardImageNormal = styled.div`opacity: 1;`
 
 const CardImageHover = styled.div`
-  transition: opacity 0.35s;
+  transition: all 14s;
   opacity: 0;
   position: absolute;
   top: 0;
@@ -58,7 +76,7 @@ const CardCaption = styled.div`
   height: 3em;
   color: #fff;
   padding: 10px 14px;
-  transition: transform 0.35s, -webkit-transform 0.35s;
+  transition: transform 0.4s;
   transform: translateY(100%);
   ${CardMember}:hover & {
     transform: translateY(-30%);
@@ -68,6 +86,7 @@ const CardText = styled.div`flex-grow: 1;`
 const CardTitle = styled.h2`
   font-size: 20px;
   line-height: 1.2;
+  color: #584f36;
   margin: 0;
   padding: 0;
   transition: transform 0.35s, -webkit-transform 0.35s;
@@ -79,8 +98,9 @@ const CardTitle = styled.h2`
 `
 const CardSubtitle = styled.h3`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.2;
+  color: #967b10;
   transition-delay: 0.2s;
   transition: transform 0.35s, -webkit-transform 0.35s;
   transform: translateY(200%);
@@ -92,24 +112,48 @@ const CardSubtitle = styled.h3`
   }
 `
 const TictailTeam = props => (
-  <ListItem>
-    <CardMember>
-      <CardMedia>
-        <CardImageNormal>
-          <CardImage src={props.image || placeholder} widht="320" height="320" alt={`Image for ${props.first_name}`} />
-        </CardImageNormal>
-        <CardImageHover>
-          <CardImage src={props.image || placeholder} widht="320" height="320" alt={`Image for ${props.first_name}`} />
-        </CardImageHover>
-      </CardMedia>
-      <CardCaption>
-        <CardText>
-          <CardTitle>{`${props.first_name} ${props.last_name}`}</CardTitle>
-          <CardSubtitle>{`${props.title || 'Ticktailer'}, ${props.location}`}</CardSubtitle>
-        </CardText>
-      </CardCaption>
-    </CardMember>
-  </ListItem>
+  <StaggeredMotion
+    defaultStyles={[{ width: 20 }, { width: 100 }, { width: 100 }, { width: 100 }]}
+    styles={prevStyles => [
+      { width: spring(0) },
+      { width: spring(prevStyles[0].width) },
+      { width: spring(prevStyles[1].width) },
+      { width: spring(prevStyles[2].width) }
+    ]}
+  >
+    {styles => (
+      <ListItem width={styles[0].width}>
+        <CardMember>
+          <CardMedia>
+            <CardImageNormal>
+              <CardImage
+                src={props.image || placeholder}
+                widht="320"
+                height="320"
+                alt={`Image for ${props.first_name}`}
+              />
+            </CardImageNormal>
+            <CardImageHover>
+              <CardImage
+                src={props.image || placeholder}
+                widht="320"
+                height="320"
+                alt={`Image for ${props.first_name}`}
+              />
+            </CardImageHover>
+          </CardMedia>
+          <CardCaption>
+            <CardText>
+              <CardTitle>
+                {(props.first_name && props.last_name) === null ? 'No Name' : props.first_name + ' ' + props.last_name}
+              </CardTitle>
+              <CardSubtitle>{`${props.title || 'Ticktailer'}, ${props.location}`}</CardSubtitle>
+            </CardText>
+          </CardCaption>
+        </CardMember>
+      </ListItem>
+    )}
+  </StaggeredMotion>
 )
 
 export default TictailTeam
