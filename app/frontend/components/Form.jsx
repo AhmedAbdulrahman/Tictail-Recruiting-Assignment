@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import moment from 'moment-timezone'
 
 const Container = styled.div`
   width: 100%;
@@ -127,14 +128,41 @@ class Form extends Component {
     }
     let isError = false
 
+    //Validate First Name
     if (member.first_name.length < 5) {
       isError = true
-      errors.firstNameError = 'Name needs to be at least 5 characters long!'
+      errors.firstNameError = 'Fields is required and needs to be at least 5 characters long!'
     }
+    if (member.last_name.length < 5) {
+      isError = true
+      errors.lastNameError = 'Fields is required and needs to be at least 5 characters long!'
+    }
+    if (member.title.length < 5) {
+      isError = true
+      errors.titleError = 'Fields is required and needs to be at least 5 characters long!'
+    }
+    if (member.team.length < 5) {
+      isError = true
+      errors.teamError = 'Fields is required and needs to be at least 5 characters long!'
+    }
+    // Validate Color Code
     if (/^[0-9A-F]{6}$/i.test(member.color) == false) {
       isError = true
       errors.colorError = 'Color code format #c1c1c1!'
     }
+
+    // Validate IMAGE URL
+    if (!/^(f|ht)tps?:\/\//i.test(member.image)) {
+      isError = true
+      errors.imageError = 'Field is required and must be valid URL format'
+    }
+
+    //Validate Location
+    if (!moment.tz.zone(member.location)) {
+      isError = true
+      errors.locationError = 'Field is required and must be in Timezone format'
+    }
+
     // Clear error message
     this.setState({
       ...errors
@@ -175,37 +203,80 @@ class Form extends Component {
           {this.props.isUpdated ? <Error className="error">Member updated successfully.</Error> : null}
           <FormGroup>
             <Label htmlFor="first_name">First Name</Label>
-            <Input name="first_name" type="text" value={member.first_name} onChange={e => this.change(e)} autoFocus />
+            <Input
+              name="first_name"
+              type="text"
+              value={member.first_name}
+              onChange={e => this.change(e)}
+              placeholder="(ex: Johan)"
+              autoFocus
+            />
             <Error className="error">{this.state.firstNameError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="last_name">Last Name</Label>
-            <Input name="last_name" type="text" value={member.last_name} onChange={e => this.change(e)} />
+            <Input
+              name="last_name"
+              type="text"
+              value={member.last_name}
+              onChange={e => this.change(e)}
+              placeholder="(ex: Ericsson)"
+            />
             <Error className="error">{this.state.lastNameError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="title">Title</Label>
-            <Input name="title" type="text" value={member.title} onChange={e => this.change(e)} />
+            <Input
+              name="title"
+              type="text"
+              value={member.title}
+              onChange={e => this.change(e)}
+              placeholder="(ex: Manager)"
+            />
             <Error className="error">{this.state.titleError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="team">Team</Label>
-            <Input name="team" type="text" value={member.team} onChange={e => this.change(e)} />
+            <Input
+              name="team"
+              type="text"
+              value={member.team}
+              onChange={e => this.change(e)}
+              placeholder="(ex: Engineering)"
+            />
             <Error className="error">{this.state.teamError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="color">Color</Label>
-            <Input name="color" type="text" value={member.color} onChange={e => this.change(e)} />
+            <Input
+              name="color"
+              type="text"
+              value={member.color}
+              onChange={e => this.change(e)}
+              placeholder="(ex: 'C1C1C1')"
+            />
             <Error className="error">{this.state.colorError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="image">Image</Label>
-            <Input name="image" type="text" value={member.image} onChange={e => this.change(e)} />
+            <Input
+              name="image"
+              type="text"
+              value={member.image}
+              onChange={e => this.change(e)}
+              placeholder="(ex: URL)"
+            />
             <Error className="error">{this.state.imageError}</Error>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="Location">Location</Label>
-            <Input name="location" type="text" value={member.location} onChange={e => this.change(e)} />
+            <Input
+              name="location"
+              type="text"
+              value={member.location}
+              onChange={e => this.change(e)}
+              placeholder="(ex: America/Los_Angeles)"
+            />
             <Error className="error">{this.state.locationError}</Error>
           </FormGroup>
           <FormGroup>

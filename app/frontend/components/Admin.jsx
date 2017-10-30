@@ -58,7 +58,6 @@ class Admin extends Component {
       location: ''
     },
     showForm: false,
-    hasError: false,
     isSuccess: false,
     isUpdated: false
   }
@@ -84,14 +83,13 @@ class Admin extends Component {
     this.setState(() => {
       return {
         showForm: false,
-        member: {},
-        hasError: false
+        member: {}
       }
     })
   }
 
   showForm = () => {
-    this.setState({ showForm: true, hasError: false })
+    this.setState({ showForm: true })
   }
 
   // Add New Member or Update existing one
@@ -133,11 +131,6 @@ class Admin extends Component {
         ...updatedValue
       }
     })
-  }
-
-  //Handle Form Errors
-  handleError = () => {
-    this.setState({ hasError: true })
   }
 
   // Edit click handler
@@ -191,7 +184,6 @@ class Admin extends Component {
             handleError={this.handleError}
             isSuccess={this.state.isSuccess}
             isUpdated={this.state.isUpdated}
-            hasFormError={this.state.hasError}
           />
         ) : null}
         <TeamMemberList
