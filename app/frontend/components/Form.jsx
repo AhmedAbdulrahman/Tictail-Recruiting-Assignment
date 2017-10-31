@@ -46,36 +46,36 @@ class Form extends Component {
     //Validate First Name
     if (member.first_name.length < 5) {
       isError = true
-      errors.firstNameError = 'Fields is required and needs to be at least 5 characters long!'
+      errors.firstNameError = 'Name is required and needs to be at least 5 characters long!'
     }
     if (member.last_name.length < 5) {
       isError = true
-      errors.lastNameError = 'Fields is required and needs to be at least 5 characters long!'
+      errors.lastNameError = 'Last Name is required and needs to be at least 5 characters long!'
     }
     if (member.title.length < 5) {
       isError = true
-      errors.titleError = 'Fields is required and needs to be at least 5 characters long!'
+      errors.titleError = 'Title is required and needs to be at least 5 characters long!'
     }
     if (member.team.length < 5) {
       isError = true
-      errors.teamError = 'Fields is required and needs to be at least 5 characters long!'
+      errors.teamError = 'Team is required and needs to be at least 5 characters long!'
     }
     // Validate Color Code
     if (/^[0-9A-F]{6}$/i.test(member.color) == false) {
       isError = true
-      errors.colorError = 'Color code format #c1c1c1!'
+      errors.colorError = 'Color is required and must be valid code format'
     }
 
     // Validate IMAGE URL
     if (!/^(f|ht)tps?:\/\//i.test(member.image)) {
       isError = true
-      errors.imageError = 'Field is required and must be valid URL format'
+      errors.imageError = 'Image is required and must be valid URL format'
     }
 
     //Validate Location
     if (!moment.tz.zone(member.location)) {
       isError = true
-      errors.locationError = 'Field is required and must be in Timezone format'
+      errors.locationError = 'Location is required and must be in Timezone format'
     }
 
     // Clear error message

@@ -33,7 +33,7 @@ class TeamMemberList extends Component {
           <tr>
             <Th>Name</Th>
             <Th>Surname</Th>
-            <Th colSpan="2">Title</Th>
+            <Th>Title</Th>
             <Th>Team</Th>
             <Th>Action</Th>
           </tr>

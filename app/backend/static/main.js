@@ -47575,7 +47575,7 @@ var TeamMemberList = function (_Component) {
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             __WEBPACK_IMPORTED_MODULE_1__styles_AppStyle__["D" /* Th */],
-            { colSpan: '2' },
+            null,
             'Title'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47660,7 +47660,7 @@ var TeamMember = function (_Component) {
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'td',
-        { colSpan: '2' },
+        null,
         this.props.member.title || 'N/A'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47756,36 +47756,36 @@ var Form = function (_Component) {
       //Validate First Name
       if (member.first_name.length < 5) {
         isError = true;
-        errors.firstNameError = 'Fields is required and needs to be at least 5 characters long!';
+        errors.firstNameError = 'Name is required and needs to be at least 5 characters long!';
       }
       if (member.last_name.length < 5) {
         isError = true;
-        errors.lastNameError = 'Fields is required and needs to be at least 5 characters long!';
+        errors.lastNameError = 'Last Name is required and needs to be at least 5 characters long!';
       }
       if (member.title.length < 5) {
         isError = true;
-        errors.titleError = 'Fields is required and needs to be at least 5 characters long!';
+        errors.titleError = 'Title is required and needs to be at least 5 characters long!';
       }
       if (member.team.length < 5) {
         isError = true;
-        errors.teamError = 'Fields is required and needs to be at least 5 characters long!';
+        errors.teamError = 'Team is required and needs to be at least 5 characters long!';
       }
       // Validate Color Code
       if (/^[0-9A-F]{6}$/i.test(member.color) == false) {
         isError = true;
-        errors.colorError = 'Color code format #c1c1c1!';
+        errors.colorError = 'Color is required and must be valid code format';
       }
 
       // Validate IMAGE URL
       if (!/^(f|ht)tps?:\/\//i.test(member.image)) {
         isError = true;
-        errors.imageError = 'Field is required and must be valid URL format';
+        errors.imageError = 'Image is required and must be valid URL format';
       }
 
       //Validate Location
       if (!__WEBPACK_IMPORTED_MODULE_1_moment_timezone___default.a.tz.zone(member.location)) {
         isError = true;
-        errors.locationError = 'Field is required and must be in Timezone format';
+        errors.locationError = 'Location is required and must be in Timezone format';
       }
 
       // Clear error message
@@ -48970,7 +48970,7 @@ const BounceIn = __WEBPACK_IMPORTED_MODULE_0_styled_components__["b" /* keyframe
 const FadeIn = __WEBPACK_IMPORTED_MODULE_0_styled_components__["b" /* keyframes */]`
   0% {
     opacity: 0;
-    transform: translateX(-80px) translateY(0px);
+    transform: translateY(-20px) translateY(0px);
     transition: opacity 750ms, transform 750ms cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   100% {
@@ -49018,27 +49018,27 @@ const Header = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */
 /* harmony export (immutable) */ __webpack_exports__["q"] = Header;
 
 const AddButton = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].button`
-  background-color: #fefefe;
-  border: 2px solid #dce2ec;
+  background-color: #ffdb49;
+  border: 0;
   border-radius: 2px;
   font-size: 14px;
-  color: #1f1e1d;
+  font-weight: 600;
+  color: #5a5a5a;
   outline: none;
-  padding: 10px;
+  padding: 14px 20px;
   margin-bottom: 30px;
   transition: all 0.1s;
   cursor: pointer;
+  box-shadow: 1px 2px 18px 0px rgba(0, 0, 0, 0.12);
   &:hover {
     border-color: #ddc76b;
     color: #000000;
+    box-shadow: 1px 5px 18px 0px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s ease-in-out;
   }
 `
 /* harmony export (immutable) */ __webpack_exports__["a"] = AddButton;
 
-// export const Wrapper = styled.div`
-//   min-height: 100%;
-//   height: 100px;
-// `
 const NavItem = Object(__WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */])(__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */])`
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
@@ -49126,7 +49126,9 @@ const Container = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default
 const MemberForm = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].form`
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 90%;
   justify-content: space-between;
   margin: 0 auto;
   margin-bottom: 0;
@@ -49159,7 +49161,7 @@ const FormGroup = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default
   margin-bottom: 0;
   margin-right: 10px;
   padding: 10px 0;
-  width: 100%;
+  width: 20%;
   @media (min-width: 1200px) and (max-width: 1600px) {
     width: 20%;
   }
@@ -49200,59 +49202,46 @@ const ButtonWrapper = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* def
 const SubmitButton = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].input.attrs({
   type: 'submit'
 })`
-  width: 45%;
-  background-color: #ffeea8;
-  border: 2px solid #ffdb49;
+  background-color: #ffdb49;
+  border: 0;
   border-radius: 2px;
   font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
+  font-weight: 600;
+  color: #5a5a5a;
   outline: none;
-  padding: 10px;
+  padding: 14px 20px;
+  margin-bottom: 30px;
   transition: all 0.1s;
   cursor: pointer;
+  box-shadow: 1px 2px 18px 0px rgba(0, 0, 0, 0.12);
   &:hover {
     border-color: #ddc76b;
     color: #000000;
+    box-shadow: 1px 5px 18px 0px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s ease-in-out;
   }
 `
 /* harmony export (immutable) */ __webpack_exports__["A"] = SubmitButton;
 
-const CancelButton = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].button`
-  width: 45%;
-  background-color: #ffdb49;
-  border: 2px solid #f4d34d;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
-  outline: none;
-  padding: 10px;
-  transition: all 0.1s;
-  cursor: pointer;
-  &:hover {
-    border-color: #ddc76b;
-    color: #000000;
-  }
-`
+const CancelButton = AddButton.extend``
 /* harmony export (immutable) */ __webpack_exports__["d"] = CancelButton;
 
 // Team Member Style
 const Tr = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].tr`
   opacity: 0;
+  animation: ${FadeIn} 0.7s ease-in-out forwards;
   td {
-    padding: 8px;
     line-height: 1.5;
-    padding: 15px;
-    text-align: center;
   }
   td:first-child {
     border-radius: 2px 0 0 2px;
   }
-  td:last-child {
-    border-radius: 0 2px 2px 0;
-    overflow: visible;
-    white-space: normal;
+  & img {
+    width: 14%;
+    height: 65px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 1rem;
   }
 `
 /* harmony export (immutable) */ __webpack_exports__["G"] = Tr;
@@ -49260,16 +49249,17 @@ const Tr = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].tr
 const ButtonEdit = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].button`
   display: inline-block;
   text-align: center;
-  white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  background-color: #ffe57c;
-  padding: 0.375rem 0.75rem;
-  margin: 0 0.2rem 0.5rem;
+  background-color: #fff;
+  border: 1px solid #e2e9f3;
+  padding: 0.375rem 0.5rem;
+  margin: 0.2rem 0.2rem;
+  width: 34%;
   font-size: 0.9rem;
+  font-weight: 600;
   line-height: 1.5;
   color: #3d4041;
-  border: 0;
   outline: none;
   border-radius: 0.25rem;
   box-sizing: content-box;
@@ -49277,15 +49267,14 @@ const ButtonEdit = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* defaul
   transition: all 0.1s;
   cursor: pointer;
   &:hover {
-    background-color: #ffdb49;
-    border-color: #cccccc;
+    background-color: #ffd262;
+    border-color: #e2e9f3;
     color: #000000;
   }
   @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 27%;
   }
   @media (min-width: 600px) and (max-width: 800px) {
-    width: 44%;
+    width: 50%;
   }
   @media (min-width: 320px) and (max-width: 480px) {
     width: 100%;
@@ -49295,51 +49284,66 @@ const ButtonEdit = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* defaul
 
 // Team Members List
 const Table = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].table`
-  width: 100%;
-  max-width: 100%;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 90%;
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
   margin-bottom: 1rem;
-  border-spacing: 0 10px;
+  font-size: 15px;
+  box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
 
   & td,
   th {
-    padding: 0.75rem;
+    padding: 0.5em 1.5em;
+    display: table-cell;
+    text-align: left;
     vertical-align: middle;
+    border-radius: 2px;
   }
-
-  & tr {
-    animation: ${FadeIn} 0.7s ease-in-out forwards;
-  }
-  @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 80%;
+  @media only screen and (min-width: 993px) {
+    width: 85%;
   }
 `
 /* harmony export (immutable) */ __webpack_exports__["B"] = Table;
 
 const Thead = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].thead`
-  border: 0;
-  outline: 0;
   background-color: transparent;
+  line-height: 3;
 `
 /* harmony export (immutable) */ __webpack_exports__["E"] = Thead;
 
 const Tbody = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].tbody`
-	& tr {
-		background-color: #fff;
-    box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
-    box-sizing: box-content;
+  > tr {
+    background-color: #fff;
+    border-bottom: 1px solid #e8effa;
+  }
 `
 /* harmony export (immutable) */ __webpack_exports__["C"] = Tbody;
 
 const Th = __WEBPACK_IMPORTED_MODULE_0_styled_components__["a" /* default */].th`
-  padding: 10px;
   border: 0;
   outline: 0;
   background-color: transparent;
-  color: #8399a3;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f1e1d;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+  position: relative;
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 30px;
+    left: 12px;
+    width: 5px;
+    height: 6px;
+    background-color: #ffdb49;
+  }
 `
 /* harmony export (immutable) */ __webpack_exports__["D"] = Th;
 

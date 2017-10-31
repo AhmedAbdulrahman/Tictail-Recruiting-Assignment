@@ -16,7 +16,7 @@ class TeamMember extends Component {
       <Tr key={this.props.id}>
         <td>{this.props.member.first_name || 'N/A'}</td>
         <td>{this.props.member.last_name || 'N/A'}</td>
-        <td colSpan="2">{this.props.member.title || 'N/A'}</td>
+        <td>{this.props.member.title || 'N/A'}</td>
         <td>{this.props.member.team || 'N/A'}</td>
         <td>
           <ButtonEdit onClick={this.editMember}>Edit</ButtonEdit>

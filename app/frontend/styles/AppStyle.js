@@ -20,7 +20,7 @@ const BounceIn = keyframes`
 const FadeIn = keyframes`
   0% {
     opacity: 0;
-    transform: translateX(-80px) translateY(0px);
+    transform: translateY(-20px) translateY(0px);
     transition: opacity 750ms, transform 750ms cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   100% {
@@ -64,25 +64,25 @@ export const Header = styled.header`
   z-index: 1;
 `
 export const AddButton = styled.button`
-  background-color: #fefefe;
-  border: 2px solid #dce2ec;
+  background-color: #ffdb49;
+  border: 0;
   border-radius: 2px;
   font-size: 14px;
-  color: #1f1e1d;
+  font-weight: 600;
+  color: #5a5a5a;
   outline: none;
-  padding: 10px;
+  padding: 14px 20px;
   margin-bottom: 30px;
   transition: all 0.1s;
   cursor: pointer;
+  box-shadow: 1px 2px 18px 0px rgba(0, 0, 0, 0.12);
   &:hover {
     border-color: #ddc76b;
     color: #000000;
+    box-shadow: 1px 5px 18px 0px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s ease-in-out;
   }
 `
-// export const Wrapper = styled.div`
-//   min-height: 100%;
-//   height: 100px;
-// `
 export const NavItem = styled(Link)`
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
@@ -156,7 +156,9 @@ export const Container = styled.div`
 export const MemberForm = styled.form`
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 90%;
   justify-content: space-between;
   margin: 0 auto;
   margin-bottom: 0;
@@ -185,7 +187,7 @@ export const FormGroup = styled.div`
   margin-bottom: 0;
   margin-right: 10px;
   padding: 10px 0;
-  width: 100%;
+  width: 20%;
   @media (min-width: 1200px) and (max-width: 1600px) {
     width: 20%;
   }
@@ -218,70 +220,58 @@ export const ButtonWrapper = styled.div`
 export const SubmitButton = styled.input.attrs({
   type: 'submit'
 })`
-  width: 45%;
-  background-color: #ffeea8;
-  border: 2px solid #ffdb49;
-  border-radius: 2px;
-  font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
-  outline: none;
-  padding: 10px;
-  transition: all 0.1s;
-  cursor: pointer;
-  &:hover {
-    border-color: #ddc76b;
-    color: #000000;
-  }
-`
-export const CancelButton = styled.button`
-  width: 45%;
   background-color: #ffdb49;
-  border: 2px solid #f4d34d;
+  border: 0;
   border-radius: 2px;
   font-size: 14px;
-  color: #232728;
-  text-transform: uppercase;
+  font-weight: 600;
+  color: #5a5a5a;
   outline: none;
-  padding: 10px;
+  padding: 14px 20px;
+  margin-bottom: 30px;
   transition: all 0.1s;
   cursor: pointer;
+  box-shadow: 1px 2px 18px 0px rgba(0, 0, 0, 0.12);
   &:hover {
     border-color: #ddc76b;
     color: #000000;
+    box-shadow: 1px 5px 18px 0px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s ease-in-out;
   }
 `
+export const CancelButton = AddButton.extend``
 // Team Member Style
 export const Tr = styled.tr`
   opacity: 0;
+  animation: ${FadeIn} 0.7s ease-in-out forwards;
   td {
-    padding: 8px;
     line-height: 1.5;
-    padding: 15px;
-    text-align: center;
   }
   td:first-child {
     border-radius: 2px 0 0 2px;
   }
-  td:last-child {
-    border-radius: 0 2px 2px 0;
-    overflow: visible;
-    white-space: normal;
+  & img {
+    width: 14%;
+    height: 65px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 1rem;
   }
 `
 export const ButtonEdit = styled.button`
   display: inline-block;
   text-align: center;
-  white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  background-color: #ffe57c;
-  padding: 0.375rem 0.75rem;
-  margin: 0 0.2rem 0.5rem;
+  background-color: #fff;
+  border: 1px solid #e2e9f3;
+  padding: 0.375rem 0.5rem;
+  margin: 0.2rem 0.2rem;
+  width: 34%;
   font-size: 0.9rem;
+  font-weight: 600;
   line-height: 1.5;
   color: #3d4041;
-  border: 0;
   outline: none;
   border-radius: 0.25rem;
   box-sizing: content-box;
@@ -289,15 +279,14 @@ export const ButtonEdit = styled.button`
   transition: all 0.1s;
   cursor: pointer;
   &:hover {
-    background-color: #ffdb49;
-    border-color: #cccccc;
+    background-color: #ffd262;
+    border-color: #e2e9f3;
     color: #000000;
   }
   @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 27%;
   }
   @media (min-width: 600px) and (max-width: 800px) {
-    width: 44%;
+    width: 50%;
   }
   @media (min-width: 320px) and (max-width: 480px) {
     width: 100%;
@@ -305,45 +294,60 @@ export const ButtonEdit = styled.button`
 `
 // Team Members List
 export const Table = styled.table`
-  width: 100%;
-  max-width: 100%;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 90%;
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
   margin-bottom: 1rem;
-  border-spacing: 0 10px;
+  font-size: 15px;
+  box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
 
   & td,
   th {
-    padding: 0.75rem;
+    padding: 0.5em 1.5em;
+    display: table-cell;
+    text-align: left;
     vertical-align: middle;
+    border-radius: 2px;
   }
-
-  & tr {
-    animation: ${FadeIn} 0.7s ease-in-out forwards;
-  }
-  @media (min-width: 1200px) and (max-width: 1600px) {
-    width: 80%;
+  @media only screen and (min-width: 993px) {
+    width: 85%;
   }
 `
 export const Thead = styled.thead`
-  border: 0;
-  outline: 0;
   background-color: transparent;
+  line-height: 3;
 `
 export const Tbody = styled.tbody`
-	& tr {
-		background-color: #fff;
-    box-shadow: 0 8px 20px 0px rgba(131, 153, 163, 0.25);
-    box-sizing: box-content;
+  > tr {
+    background-color: #fff;
+    border-bottom: 1px solid #e8effa;
+  }
 `
 export const Th = styled.th`
-  padding: 10px;
   border: 0;
   outline: 0;
   background-color: transparent;
-  color: #8399a3;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f1e1d;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
+  position: relative;
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 30px;
+    left: 12px;
+    width: 5px;
+    height: 6px;
+    background-color: #ffdb49;
+  }
 `
 export const Td = styled.td`
   text-align: center;
